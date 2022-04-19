@@ -1,0 +1,34 @@
+<header>
+  <div class="operations">
+    <button [disabled]="Choosing || simulating||afterSim" title="Add Machine" (click)="add('M')">
+      <div class = "button-text">+M</div>
+    </button>
+
+    <button [disabled]="Choosing || simulating||afterSim" title="Add Queues" (click)="add('Q')">
+      <div  class = "button-text">+Q</div>
+    </button>
+
+    <button [disabled]="Choosing || simulating||afterSim" (click) = "addArrow()">
+      <div title="Connect with Arrows"class = "button-text">↗</div>
+    </button>
+
+    <button [disabled]="Choosing || simulating||afterSim" (click)="startSimulation()">
+      <div title="Start Simulation" class = "button-text">▶</div>
+    </button>
+
+    <button [disabled]="Choosing ||simulating" title="Clear all the board" (click)="clearAll()">
+      <div class = "button-text">⌧</div>
+    </button>
+
+    <button [disabled]="Choosing ||simulating" (click)="replaySimulation()">
+      <div title="Replay Previous Simulation" class = "button-text">⟳</div>
+    </button>
+
+  </div>
+
+</header>
+<section>
+  <div id="container"></div>
+</section>
+
+
