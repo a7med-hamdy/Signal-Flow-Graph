@@ -14,8 +14,8 @@ export class RequestsService {
    * Craeation & Deletion Graph requests            *
    **************************************************/
   // > Node < creation request
-  add_node(){
-    return this.http.post<any>(`${this.url}/+node`, {}).subscribe(data =>{
+  add_node(name: string){
+    return this.http.post<any>(`${this.url}/+node/${name}`, {}).subscribe(data =>{
       console.log(data);
     });
   }

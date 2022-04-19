@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 public class RequestsController {
-    Graph graph = new Graph();
+    Graph SFG = new Graph();
 
-    //using Regex to check if the weights of the edges are numbers or variables
+    //using Regex to check if the weights of the edges are numbers or not
     /*the numbers grammar "-?\\d+(\\.\\d+)?":
         "-?"         -> negative sign is optional
         "\\d+"       -> one or more digits
         "(\\.\\d+)?" -> fraction part is optional
     */
     private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+    //checks if the given string is a number or not
     public boolean isNumeric(String strNum) {
         if (strNum == null) {
             return false; 
@@ -26,10 +27,10 @@ public class RequestsController {
      * Craeation Graph requests                       *
      **************************************************/
     //adding a node request
-    @PostMapping("/+node")
-    public boolean add_node(){
+    @PostMapping("/+node/{name}")
+    public boolean add_node(@PathVariable("name") String name){
         try{
-            // this.graph.addNode();
+            // this.SFG.graph.addVertex(name);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -39,7 +40,7 @@ public class RequestsController {
     }
 
     //adding an edge request
-    //for example: "/+edge/x1/x2/40" adds an edge from (x1) to (x2) with weight 40
+    //for example: "/+edge/y1/y2/40" adds an edge from (y1) to (y2) with weight 40
     @PostMapping("/+edge/{from}/{to}/{weight}")
     public boolean add_edge(
         @PathVariable("from") String from,
@@ -47,32 +48,26 @@ public class RequestsController {
         @PathVariable("weight") String weight)
 
     {
-        String str = "";
         try{
             if(isNumeric(weight)){ //Numeric weights
-                // str = graph.addEdge(from, to, Double.valueOf(weight));
+                // this.SFG.graph.setEdgeWeight(this.Graph.graph.addEdge(from, to), Double.valueOf(weight));
             }
             else{ //variable weights
-                // str = graph.addEdge(from, to, weight);
+                // this.SFG.graph.addEdge(from, to, weight);
             }
         }
         catch(Exception e){
             e.printStackTrace();
             return false;
         }
-        if(str.equalsIgnoreCase("success"))
-        {
-            return true;
-        }
-        else
-            return false;
+        return true;
     }
 
     //clear the whole graph to draw another one
     @DeleteMapping("/clear")
     public boolean clearGraph(){
         try{
-            this.graph = new Graph();
+            this.SFG = new Graph();
         }
         catch(Exception e){
             e.printStackTrace();
