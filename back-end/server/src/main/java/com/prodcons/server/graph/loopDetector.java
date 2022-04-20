@@ -1,9 +1,7 @@
 package com.prodcons.server.graph;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import org.jgrapht.alg.cycle.HawickJamesSimpleCycles;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -26,7 +24,12 @@ public class loopDetector {
     {
         List<List<List<String>>> answer = new ArrayList<>();
         List<List<String>> allLoops = this.detector.findSimpleCycles();
-        answer.add(allLoops);
+        for(List<String> l : allLoops){
+            List<List<String >> list = new ArrayList<>();
+            list.add(l);
+            answer.add(list);
+        }
+        //answer.add(allLoops);
         // List<List<String>> li = Lists.cartesianProduct(allLoops);
         for(int i = 2; i <= allLoops.size(); i++)
         {
@@ -41,7 +44,7 @@ public class loopDetector {
                     if(!this.isNonTouching(y))
                     {
                         flag = false;
-                    } 
+                    }
                 }
                 if(flag)
                 {
@@ -51,7 +54,6 @@ public class loopDetector {
         }
         return answer;
     }
-
     private boolean isNonTouching(List<String> list)
     {
         return list.stream().distinct().count() == list.size();
