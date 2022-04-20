@@ -47,7 +47,26 @@ export class ShapeWithText{
   getFollowersOut(){return this.OutArrows;}
   getFollowersIn(){return this.InArrows;}
 
+  IsPointingIn(criteria:any){
+    var shape = this.InArrows.filter(function(element){
+      return element.getSource() == criteria;
+    });
 
+    if(shape.length == 0){
+      return false;
+    }
+    return true;
+  }
+
+  IsPointingOut(criteria:any){
+    var shape = this.OutArrows.filter(function(element){
+      return element.getDestination() == criteria;
+    });
+    if(shape != null){
+      return true;
+    }
+    return false;
+  }
   addFollowerIn(arrow:any){
     this.InArrows.push(arrow);
   }

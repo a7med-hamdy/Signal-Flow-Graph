@@ -1,37 +1,32 @@
+import { ThrowStmt } from '@angular/compiler';
 import Konva from 'konva'
 export class Arrow{
   arrow!:Konva.Arrow;
+  text!:Konva.Text;
+  Branch!:Konva.Group;
   Source!:Konva.Group;
   Destination!:Konva.Group;
-  constructor(src:Konva.Group, dst:Konva.Group){
+
+  constructor(src:Konva.Group,
+              dst:Konva.Group,
+              arrow:Konva.Arrow,
+              txt:Konva.Text){
     this.Source = src;
     this.Destination = dst;
-    this.arrow = new Konva.Arrow({
-      points:[
-      this.Source.x()+50,
-      this.Source.y(),
-      this.Destination.x()-50,
-      this.Destination.y()
-    ],
-    fill:'black',
-    stroke:'black'
-
+    this.text = txt;
+    this.arrow = arrow;
+    this.Branch = new Konva.Group({
+        name:this.text.name(),
+        x:this.text.x(),
+        y:this.text.y(),
+        offsetX: this.text.x(),
+        offsetY:this.text.y()
     });
-    var component = this;
-    function Follow(){
-      const pointsArr = [
-        component.Source.x()+50,
-        component.Source.y(),
-        component.Destination.x()-50,
-        component.Destination.y(),
-      ]
-      component.arrow.setAttrs({
-        points:pointsArr,
-      });
-    }
-    this.Source.on('dragmove',Follow);
-    this.Destination.on('dragmove',Follow);
+    this.Branch.add(txt);
+    this.Branch.add(arrow);
   }
+  getBranch(){return this.Branch;}
+  getText(){return this.text;}
   getArrow(){return this.arrow;}
   getSource(){return this.Source;}
   getDestination(){return this.Destination;}

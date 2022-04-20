@@ -4,6 +4,7 @@ import { WebSocketAPI } from '../WebSocketAPI';
 import { ShapeWithText } from './shapeWithText'
 import { Arrow } from './arrow';
 import { RequestsService } from '../requests/requests.service';
+import { shapeFactory } from './shapeFactory';
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
@@ -69,7 +70,7 @@ export class BoardComponent implements OnInit {
         this.afterSim = true;
         sum = 0;
         console.log(JSON.stringify([JSON.stringify(this.shapes),JSON.stringify(this.pointers)]))
-        this.req.save(JSON.stringify([JSON.stringify(this.shapes),JSON.stringify(this.pointers)]))
+      //  this.req.save(JSON.stringify([JSON.stringify(this.shapes),JSON.stringify(this.pointers)]))
 
       }
     }
@@ -108,7 +109,7 @@ export class BoardComponent implements OnInit {
   /**
    * loads boardfrom backend
    */
-  loadBoard(){
+  /*loadBoard(){
     this.req.load().subscribe(data =>{
       if(data == null){
         this.simulating = false;
@@ -153,7 +154,7 @@ export class BoardComponent implements OnInit {
       }
     });
     return 0;
-  }
+  }*/
   /**
    * starts the simulation
    */
@@ -161,7 +162,7 @@ export class BoardComponent implements OnInit {
     this.req.validate().subscribe(data =>{
       if(data == true){
         this.simulating = true;
-        this.req.play().subscribe();
+     //   this.req.play().subscribe();
       }
       else{
         this.simulating = false;
@@ -171,10 +172,10 @@ export class BoardComponent implements OnInit {
   }
   replaySimulation(){
     try {
-      this.loadBoard();
-      this.req.replay().subscribe(data =>{
-        //this.simulating = true;
-      });
+     // this.loadBoard();
+      //this.req.replay().subscribe(data =>{
+        this.simulating = true;
+     // }//);
 
     } catch (error) {
       this.simulating = false;
@@ -202,98 +203,14 @@ export class BoardComponent implements OnInit {
    * @param string M | Q
    */
   add(string:string){
-    var shape;
-    var text1;
-    var text2;
-    var color = 'grey';
-    var Group;
-    //if M
-    if(string == 'M'){
-      this.req.addMachine();
-      console.log("add Ms");
-      shape = new Konva.Circle({
-        name: 'M'+this.numOfMs.toString(),
-        x:0,
-        y:0,
-        radius:50,
-        fill: color,
-      });
-      text1 = new Konva.Text({
-          offset:{x:shape.getAttr('radius')/8,
-                  y:shape.getAttr('radius')/8
-          },
-        x:shape.getAttr('x'),
-        y:shape.getAttr('y'),
-        fill:'black',
-        fontFamily:'Consolas',
-        fontSize:20,
-        text:'M'+this.numOfMs.toString()
-      });
-      this.numOfMs++
 
-    }
-    //if Q
-    else{
-      if(this.numOfQs!=0)
-        this.req.addQueue();
-      console.log("addQs");
-      shape = new Konva.Rect({
-        name:'Q'+this.numOfQs.toString(),
-        x:300,
-        y:300,
-        width:100,
-        height:50,
-        fill:color,
-      });
-      shape.setAttrs({
-        offset:{x:shape.getAttr('width')/2,
-                y:shape.getAttr('height')/2
-        }
-      })
-      text1 = new Konva.Text({
-          offset:{x:shape.getAttr('offsetX')/4,
-                  y:shape.getAttr('offsetY')/4
-          },
-        x:shape.getAttr('x'),
-        y:shape.getAttr('y'),
-        fill:'black',
-        fontFamily:'Consolas',
-        fontSize:20,
-        text:'Q'+this.numOfQs.toString()
-      });
-      text2 = new Konva.Text({
-      name:'text2',
-        offset:{x:shape.getAttr('offsetX')*1.5,
-                y:shape.getAttr('offsetY')*1.5
-        },
-      x:shape.getAttr('x'),
-      y:shape.getAttr('y'),
-      fill:'black',
-      fontFamily:'Consolas',
-      fontSize:20,
-      text: '0'
-    });
+    var sWithT:any = shapeFactory.buildNode(this.numOfMs);
+    console.log(sWithT)
+    var a = JSON.parse(JSON.stringify(sWithT))
+    this.shapes.push(sWithT);
+    this.layer.add(sWithT.getShapeWithText());
+    this.numOfMs++
 
-    this.numOfQs++
-    }
-    Group = new Konva.Group({
-      name:shape.name(),
-      draggable: true,
-      x:shape.x(),
-      y:shape.y(),
-      offsetX: shape.x(),
-      offsetY:shape.y()
-    });
-    Group.add(shape)
-    Group.add(text1)
-    var FrontArrows: any[] = [];
-    var BackArrows: any[] = [];
-
-    var SwithT = new ShapeWithText(Group,text2,BackArrows,FrontArrows,color,0);
-    console.log(SwithT)
-    var a = JSON.parse(JSON.stringify(SwithT))
-    this.shapes.push(SwithT);
-    this.layer.add(SwithT.getShapeWithText())
   }
 
 
@@ -329,33 +246,30 @@ export class BoardComponent implements OnInit {
         console.log("Two clicks")
         if(source != null && destination != null && source != destination){
           console.log("adding arrows!")
+          try{
           //get the source and destination shapes
           var x = component.getShapeWithTextFromArray(source);
           var y = component.getShapeWithTextFromArray(destination);
-
-          if(source.name().includes('M')){
-            var followers = x.getFollowersOut();
-            var f = followers.filter(function(element:any){
-              return element.getDestination().name().includes('Q');
-            });
-            if(f.length != 0){
-              component.Choosing=false
-              component.stage.off('click');
-              return
-            }
+          var curveoffset = y.getFollowersIn().length;
+          var curveHorizontal = 1;
+          if(x.IsPointingIn(y.getShapeWithText())){
+            curveHorizontal = -1;
+            curveoffset = y.getFollowersOut().length;
           }
-          component.req.addArrow(source.name(),destination.name()).subscribe(data =>{ // send request
-            if(data == false){return;}
-            else{
-              arrow = new Arrow(source,destination); //create new arrow component
-              x.addFollowerOut(arrow);
-              y.addFollowerIn(arrow);
-              x.playFlashAnimation();
-              component.pointers.push(arrow);    //add the arrow to the shapes's arrays
-              component.layer.add(arrow.getArrow());  //add arrow to the layer to display
-              console.log(JSON.parse(JSON.stringify(component.pointers)))
-            }
-          });
+          var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //create new arrow component
+          //create new arrow component
+          x.addFollowerOut(arrow);
+          y.addFollowerIn(arrow);
+          x.playFlashAnimation();
+          component.pointers.push(arrow);    //add the arrow to the shapes's arrays
+          component.layer.add(arrow.getBranch());  //add arrow to the layer to display
+          console.log(JSON.parse(JSON.stringify(component.pointers)))
+        }
+        catch{
+          component.Choosing=false
+          component.stage.off('click');
+          return
+        }
         }
         component.Choosing=false
         component.stage.off('click');
@@ -364,6 +278,9 @@ export class BoardComponent implements OnInit {
 
   }
 
+  editText(){
+
+  }
 
   async updateBoard(message:any){
     if(message.name.includes('M')){
