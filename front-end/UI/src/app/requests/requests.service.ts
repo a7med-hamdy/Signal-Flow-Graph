@@ -10,9 +10,9 @@ export class RequestsService {
 
   constructor(private http: HttpClient){}
 
-  /**************************************************
-   * Craeation & Deletion Graph requests            *
-   **************************************************/
+  /******************************************************************
+   * Craeation & Deletion Signal Floe Graph requests                *
+   ******************************************************************/
   // > Node < creation request
   add_node(name: string){
     return this.http.post<any>(`${this.url}/+node/${name}`, {}).subscribe(data =>{
@@ -33,17 +33,56 @@ export class RequestsService {
     });
   }
 
-  /**************************************************
-   * Solution requests                              *
-   **************************************************/
+  /******************************************************************
+   * Solution requests                                              *
+   ******************************************************************/
   validate(){
     return this.http.post<any>(`${this.url}/validate`, {})
   }
-  // start simulation request
+
   solve(){
     return this.http.post<any>(`${this.url}/solve`, {})
   }
 
+  get_forward_paths(){
+    return this.http.get<any>(`${this.url}/solve/forward-paths`)
+    .subscribe(response => { 
+      //store the forward paths
+      console.log(response); 
+    });
+  }
+
+  get_loops(){
+    return this.http.get<any>(`${this.url}/solve/loops`)
+    .subscribe(response => { 
+      //store the loops
+      console.log(response); 
+    });
+  }
+
+  get_non_touching_loops(){
+    return this.http.get<any>(`${this.url}/solve/non-touching-loops`)
+    .subscribe(response => { 
+      //store the non-touching-loops
+      console.log(response); 
+    });
+  }
+
+  get_determinants(){
+    return this.http.get<any>(`${this.url}/solve/determinants`)
+    .subscribe(response => { 
+      //store the determinants
+      console.log(response); 
+    });
+  }
+
+  get_overall_gain(){
+    return this.http.get<any>(`${this.url}/solve/overall-gain`)
+    .subscribe(response => { 
+      //store the overall gain
+      console.log(response); 
+    });
+  }
   /* 
   // stop simulation request
   save(shapes:string){
