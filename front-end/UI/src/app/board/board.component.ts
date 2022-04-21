@@ -238,14 +238,11 @@ export class BoardComponent implements OnInit {
         if (clicks == 1){
           console.log("1stClick")
           source = e.target.getParent();
-          var x = component.getShapeWithTextFromArray(source);
-          x.playColorAnimation("red");
         }
         //gets its destination group
         if(clicks == 2){
           console.log("2ndClick")
           destination = e.target.getParent();
-          var y = component.getShapeWithTextFromArray(destination);
         }
       }
       if(clicks >= 2){
@@ -266,8 +263,7 @@ export class BoardComponent implements OnInit {
           //create new arrow component
           x.addFollowerOut(arrow);
           y.addFollowerIn(arrow);
-          x.playReverseColorAnimation();
-          y.playFlashAnimation();
+
           component.pointers.push(arrow);    //add the arrow to the shapes's arrays
           component.layer.add(arrow.getBranch());  //add arrow to the layer to display
           console.log(JSON.parse(JSON.stringify(component.pointers)))
@@ -277,8 +273,6 @@ export class BoardComponent implements OnInit {
           component.stage.off('click');
           component.stage.off("mouseenter");
           component.stage.container().style.cursor = "default";
-          x.playReverseColorAnimation();
-          y.playFlashAnimation();
           return
         }
         }
