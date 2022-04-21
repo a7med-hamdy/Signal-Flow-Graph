@@ -36,10 +36,12 @@ export class RequestsService {
   /******************************************************************
    * Solution requests                                              *
    ******************************************************************/
+  //checks if it's a valid Signal-Flow-Graph or not 
   validate(){
     return this.http.post<any>(`${this.url}/validate`, {})
   }
 
+  //solves & stores the solution in backend
   solve(){
     return this.http.post<any>(`${this.url}/solve`, {})
   }
@@ -47,7 +49,7 @@ export class RequestsService {
   get_forward_paths(){
     return this.http.get<any>(`${this.url}/solve/forward-paths`)
     .subscribe(response => { 
-      //store the forward paths
+      //store & diplay the forward paths
       console.log(response); 
     });
   }
@@ -55,7 +57,7 @@ export class RequestsService {
   get_loops(){
     return this.http.get<any>(`${this.url}/solve/loops`)
     .subscribe(response => { 
-      //store the loops
+      //store & diplay the loops
       console.log(response); 
     });
   }
@@ -63,7 +65,7 @@ export class RequestsService {
   get_non_touching_loops(){
     return this.http.get<any>(`${this.url}/solve/non-touching-loops`)
     .subscribe(response => { 
-      //store the non-touching-loops
+      //store & diplay the non-touching-loops
       console.log(response); 
     });
   }
@@ -71,7 +73,7 @@ export class RequestsService {
   get_determinants(){
     return this.http.get<any>(`${this.url}/solve/determinants`)
     .subscribe(response => { 
-      //store the determinants
+      //store & diplay the determinants
       console.log(response); 
     });
   }
@@ -79,23 +81,8 @@ export class RequestsService {
   get_overall_gain(){
     return this.http.get<any>(`${this.url}/solve/overall-gain`)
     .subscribe(response => { 
-      //store the overall gain
+      //store & diplay the overall gain
       console.log(response); 
     });
   }
-  /* 
-  // stop simulation request
-  save(shapes:string){
-    let params = new HttpParams();
-    params = params.append('shape', shapes);
-    return this.http.post<any>(`${this.url}/save`, params).subscribe()
-  }
-  load(){
-    return this.http.post<any>(`${this.url}/load`,{})
-  }
-  // replay a specified simulation request
-  replay(){
-    return this.http.post<any>(`${this.url}/replay`, {})
-  }
-  */
 }
