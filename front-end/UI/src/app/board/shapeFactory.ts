@@ -1,5 +1,4 @@
 import Konva from "konva";
-import { bindCallback } from "rxjs";
 import { Arrow } from "./arrow";
 import { ShapeWithText } from "./shapeWithText";
 
@@ -11,19 +10,18 @@ export class shapeFactory{
   constructor(){
 
   }
-  static buildNode(numOfMs: number) {
+  static buildNode(x:number, y:number,numOfMs: number) {
     var shape;
     var text1;
-    var text2;
-    var color = 'grey';
+    var color = 'white';
     var Group;
     //if M
       //this.req.addMachine();
       console.log("add Ms");
       shape = new Konva.Circle({
-        name: 'M'+numOfMs.toString(),
-        x:50,
-        y:50,
+        name: 'X'+numOfMs.toString(),
+        x:x,
+        y:y,
         radius:20,
         fill: color,
       });
@@ -36,7 +34,7 @@ export class shapeFactory{
         fill:'black',
         fontFamily:'Consolas',
         fontSize:20,
-        text:'M'+numOfMs.toString()
+        text:'X'+numOfMs.toString()
       });
 
     Group = new Konva.Group({
@@ -52,7 +50,7 @@ export class shapeFactory{
     var FrontArrows: any[] = [];
     var BackArrows: any[] = [];
 
-    var SwithT = new ShapeWithText(Group,text2,BackArrows,FrontArrows,color,0);
+    var SwithT = new ShapeWithText(Group,text1,BackArrows,FrontArrows,color,0);
     return SwithT;
   }
 
@@ -212,6 +210,7 @@ export class shapeFactory{
       setTimeout(() => {
         window.addEventListener('click', handleOutsideClick);
       });
+      return textNode.text();
     });
     return textNode;
   }
@@ -219,13 +218,15 @@ export class shapeFactory{
 
   public static buildArrow(src:Konva.Group, dst:Konva.Group, text:Konva.Text, offset:number, curveup:number){
 
+    var startoffset = 20; var endoffset = -20;
+    if(src.x() - dst.x()> 0){startoffset = -20; endoffset = 20}
     var arrow = new Konva.Arrow({
       points:[
-      src.x()+20,
+      src.x()+startoffset,
       src.y(),
       ((src.x()+dst.x())/2),
       ((src.y()+dst.y())/2)-(50*offset)*curveup,
-      dst.x()-20,
+      dst.x()+endoffset,
       dst.y(),
 
     ],
@@ -240,12 +241,14 @@ export class shapeFactory{
       y:((src.y()+dst.y())/2)-20-(50*offset)*curveup,
     });
     function Follow(){
+      var startoffset = 20; var endoffset = -20;
+      if(src.x() - dst.x()> 0){startoffset = -20; endoffset = 20}
       const pointsArr = [
-        src.x()+20,
+        src.x()+startoffset,
         src.y(),
         ((src.x()+dst.x())/2),
         ((src.y()+dst.y())/2)-(50*offset)*curveup,
-        dst.x()-20,
+        dst.x()+endoffset,
         dst.y(),
       ]
       arrow.setAttrs({

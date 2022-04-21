@@ -1,7 +1,7 @@
 <header>
   <div class="operations">
-    <button [disabled]="Choosing || simulating||afterSim" title="Add Machine" (click)="add('M')">
-      <div class = "button-text">+M</div>
+    <button [disabled]="Choosing || simulating||afterSim" title="Add Node" (click)="add()">
+      <div class = "button-text">X+</div>
     </button>
 
     <button [disabled]="Choosing || simulating||afterSim" (click) = "addArrow()">

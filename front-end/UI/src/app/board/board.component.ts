@@ -15,7 +15,6 @@ export class BoardComponent implements OnInit {
   shapes:any[] = [];
   stage!:Konva.Stage;
   layer!:Konva.Layer;
-  numOfQs = 0;
   numOfMs = 0;
   Choosing = false
   simulating = false
@@ -38,7 +37,7 @@ export class BoardComponent implements OnInit {
     });
     this.layer = new Konva.Layer();//create layer on start
     this.stage.add(this.layer);//add the layer to the stage on start
-    this.add('Q');
+    ///this.add();
   }
 /***************************************************************************************************************** */
   //methods for websocket
@@ -191,25 +190,32 @@ export class BoardComponent implements OnInit {
     this.pointers = [];
     this.wareHouseQueues = [];
     this.layer.destroyChildren();
-    this.numOfQs = 0;
     this.numOfMs = 0;
     this.simulating = false;
     this.afterSim = false;
     this.Choosing = false;
-    this.add('Q');
+    //this.add();
   }
   /** Adds either M or Q to the board
    *
-   * @param string M | Q
+   *
    */
-  add(string:string){
+  add(){
+    var pos:any;
+    this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"})
+    this.stage.on("click", ()=>{
+      pos = this.stage.getPointerPosition();
+      this.stage.container().style.cursor = "default";
+      this.stage.off("mouseenter");
+      this.stage.off("click");
+      var sWithT:any = shapeFactory.buildNode(pos.x,pos.y,this.numOfMs);
+      console.log(sWithT)
+      var a = JSON.parse(JSON.stringify(sWithT))
+      this.shapes.push(sWithT);
+      this.layer.add(sWithT.getShapeWithText());
+      this.numOfMs++
+    });
 
-    var sWithT:any = shapeFactory.buildNode(this.numOfMs);
-    console.log(sWithT)
-    var a = JSON.parse(JSON.stringify(sWithT))
-    this.shapes.push(sWithT);
-    this.layer.add(sWithT.getShapeWithText());
-    this.numOfMs++
 
   }
 
@@ -225,6 +231,7 @@ export class BoardComponent implements OnInit {
     var clicks = 0;
     this.Choosing = true
     var component = this;
+    this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"})
     this.stage.on("click",function(e){
       clicks++;
       console.log(e.target)
@@ -235,11 +242,14 @@ export class BoardComponent implements OnInit {
         if (clicks == 1){
           console.log("1stClick")
           source = e.target.getParent();
+          var x = component.getShapeWithTextFromArray(source);
+          x.playColorAnimation("red");
         }
         //gets its destination group
         if(clicks == 2){
           console.log("2ndClick")
           destination = e.target.getParent();
+          var y = component.getShapeWithTextFromArray(destination);
         }
       }
       if(clicks >= 2){
@@ -250,17 +260,18 @@ export class BoardComponent implements OnInit {
           //get the source and destination shapes
           var x = component.getShapeWithTextFromArray(source);
           var y = component.getShapeWithTextFromArray(destination);
-          var curveoffset = y.getFollowersIn().length;
+          var curveoffset = x.getFollowersOut().length;
           var curveHorizontal = 1;
           if(x.IsPointingIn(y.getShapeWithText())){
             curveHorizontal = -1;
-            curveoffset = y.getFollowersOut().length;
+            var curveoffset = x.getFollowersIn().length;
           }
           var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //create new arrow component
           //create new arrow component
           x.addFollowerOut(arrow);
           y.addFollowerIn(arrow);
-          x.playFlashAnimation();
+          x.playReverseColorAnimation();
+          y.playFlashAnimation();
           component.pointers.push(arrow);    //add the arrow to the shapes's arrays
           component.layer.add(arrow.getBranch());  //add arrow to the layer to display
           console.log(JSON.parse(JSON.stringify(component.pointers)))
@@ -268,17 +279,20 @@ export class BoardComponent implements OnInit {
         catch{
           component.Choosing=false
           component.stage.off('click');
+          component.stage.off("mouseenter");
+          component.stage.container().style.cursor = "default";
+          x.playReverseColorAnimation();
+          y.playFlashAnimation();
           return
         }
         }
+
         component.Choosing=false
         component.stage.off('click');
+        component.stage.off("mouseenter");
+        component.stage.container().style.cursor = "default";
       }
     });
-
-  }
-
-  editText(){
 
   }
 

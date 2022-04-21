@@ -24,17 +24,7 @@ export class ShapeWithText{
               Products:number)
     {
     this.Group =Group;
-    if(this.Group.find('.text2').length == 0){
-      if(text2 != null){
-      this.text2 = text2;
-      this.Group.add(this.text2);
-    }
-    }
-    else{
-      console.log(this.Group.find('.text2'));
-      text2 = this.Group.find('.text2')[0]
-      this.text2 = text2;
-    }
+    this.text2 = text2;
     this.InArrows = InArrows;
     this.OutArrows = OutArrows;
     this.Color = Color;
