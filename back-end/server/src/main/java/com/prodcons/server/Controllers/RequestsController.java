@@ -83,15 +83,49 @@ public class RequestsController {
     //checks if it's a valid Signal-Flow-Graph or not 
     @PostMapping("/validate")
     public boolean validate(){
-        return /* this.graph.valdiateGraph() */ true;
+        return /* this.SFG.valdiateGraph() */ true;
     }
     
     //solves & stores the solution
     @PostMapping("/solve")
     public void solve(){
-        // this.graph.solve();
+        // this.SFG.solve();
     }
 
+    @GetMapping("/solve/forward-paths")
+    public String[] get_forward_paths(){
+        String[] forward_paths = {};
+        // forward_paths = this.SFG.getForwardPaths();
+        return forward_paths;
+    }
+
+    @GetMapping("/solve/loops")
+    public String[] get_loops(){
+        String[] loops = {};
+        // loops = this.SFG.getLoops();
+        return loops;
+    }
+
+    @GetMapping("/solve/non-touching-loops")
+    public String[] get_non_touching_loops(){
+        String[] non_touching_loops = {};
+        // loops = this.SFG.getNonTouchingLoops();
+        return non_touching_loops;
+    }
+
+    @GetMapping("/solve/determinants")
+    public String[] get_determinants(){
+        String[] determinants = {};
+        // loops = this.SFG.getDeterminants();
+        return determinants;
+    }
+
+    @GetMapping("/solve/overall-gain")
+    public Double get_overall_gain(){
+        double overall_gain = 0;
+        // loops = this.SFG.getOverallGain();
+        return overall_gain;
+    }
     /* @PostMapping("/save")
     public void save(@RequestParam("shape") String shapes)
     {
