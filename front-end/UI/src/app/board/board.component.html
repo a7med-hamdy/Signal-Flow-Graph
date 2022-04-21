@@ -12,6 +12,10 @@
       <div title="Start Simulation" class = "button-text">▶</div>
     </button>
 
+    <button [disabled]="Choosing || simulating||afterSim" (click)="updateGains()">
+      <div title="Update gains" class = "button-text">🗘</div>
+    </button>
+
     <button [disabled]="Choosing ||simulating" title="Clear all the board" (click)="clearAll()">
       <div class = "button-text">⌧</div>
     </button>

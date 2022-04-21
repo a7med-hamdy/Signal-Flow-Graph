@@ -169,17 +169,13 @@ export class BoardComponent implements OnInit {
     })
 
   }
-  replaySimulation(){
-    try {
-     // this.loadBoard();
-      //this.req.replay().subscribe(data =>{
-        this.simulating = true;
-     // }//);
-
-    } catch (error) {
-      this.simulating = false;
-
+  updateGains(){
+    var arr = [];
+    for(var i = 0; i < this.pointers.length;i++){
+        arr.push([this.pointers[i].getSource().name(), this.pointers[i].getDestination().name(), this.pointers[i].getText().text()]);
     }
+    console.log(arr);
+    //update your gains here using the array;
   }
   /**
    * clears all the board
