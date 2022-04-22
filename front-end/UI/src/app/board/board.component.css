@@ -6,11 +6,14 @@ header{
   top: 0;
   align-items: center;
   height: fit-content;
-  background-color:#f1f1f1b6;
+  background-color: rgb(57, 53, 53);
   z-index: 1;
   border-bottom:solid rgb(235, 235, 235);
   box-shadow: 0 12px 16px 0 rgba(211, 211, 211, 0.24),0 17px 50px 0 rgba(122, 122, 122, 0.19);
 
+}
+#title {
+  color : white;
 }
 body{
   background-color: grey;
@@ -53,7 +56,7 @@ button:hover{
   padding:5px;
 }
 .shapes button:hover{
-  background-color: rgb(121, 135, 138);
+  background-color: rgb(57, 53, 53);
 }
 
 .operations{
@@ -77,31 +80,6 @@ button:hover{
 .operations button:hover{
   background-color: rgb(143, 130, 112);
 }
-
-
-
-
-.colors{
-  display: flex;
-  flex-wrap: wrap;
-  padding-left: 3%;
-  height: fit-content;
-  width:30%;
-  border-left:solid rgba(187, 187, 187, 0.342);
-}
-
-.colors button{
-  width: 70px;
-  height: 70px;
-  margin:2px;
-  border-width: 2px;
-}
-
-.colors button:hover{
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.452),0 17px 50px 0 rgba(0, 0, 0, 0.514);
-
-}
-
 
 
 section{
@@ -168,43 +146,49 @@ input{
   font-size:  18px;;
   background-color: rgb(233, 57, 57);
 }
-.input{
-  justify-content: space-evenly;
-  width:600px;
-  height: 300px;
-  position: absolute;
-  background-color: gainsboro;
-  top: 200px;
-  left:650px;
-  z-index: 6;
-  border-radius: 16px;
-  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.658),0 17px 50px 0 rgba(0, 0, 0, 0.575);
 
+table {
+  overflow-y: auto;
+  direction:ltr;
+  font-family: 'Cairo', sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom:10px;
 }
-.out{
-  position: relative;
-  top: -18px;
-  left: 0;
-  border-radius: 50%;
-  font-size: 15px;
-  background-color: aliceblue;
-  color:black;
-  transition: 0.5s;
+
+table td, table th {
+  padding: 8px;
 }
-.out:hover{
-  color:red;
+
+/*table tr:nth-child(even){background-color: #f2f2f2;}*/
+table tr{
+  background-color:silver;
+  padding: 8px 8px 8px 8px;
+  text-align: left;
+  transition-duration: 0.4s;
 }
-.out2{
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 0;
-  font-size: 15px;
-  background-color: aliceblue;
-  color:black;
-  border-radius: 50%;
-  transition: 0.5s;
+table td:hover {
+  background-color: #ddd;
 }
-.out2:hover{
-  color:red;
+
+table th {
+  padding-top: 12px;
+  text-align: left;
+  background-color: #232325;
+  color: white;
+  transition-duration: 0.4s;
+}
+table th:hover {
+  background-color: #ddd;
+}
+caption{
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #232325;
+  color: white;
+  transition-duration: 0.4s;
+}
+caption:hover {
+  background-color: rgb(52, 55, 67);
 }

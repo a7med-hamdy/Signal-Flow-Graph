@@ -2,7 +2,6 @@ import Konva from 'konva'
 export class ShapeWithText{
   text2!:Konva.Text;
   Group!:Konva.Group;
-  animator!:Konva.Tween;
   Products!:number;
   Color!:string;
   InArrows: any[] = [];
@@ -62,49 +61,5 @@ export class ShapeWithText{
   }
   addFollowerOut(arrow:any){
     this.OutArrows.push(arrow);
-  }
-  updateProductsNumber(t:number){
-    if(this.text2 != null){
-      this.Products = t;
-      this.text2.setAttrs({text:this.Products.toString()});
-    }
-  }
-  /******************Animation Functions*************************************** */
-  /**
-   *
-   * @param ms milliseconds
-   * @returns
-   */
-  private sleep(ms:any){
-    return new Promise(
-      resolve => setTimeout(resolve, ms)
-    );
-  }
-  async playFlashAnimation(){
-    this.animator = new Konva.Tween({
-      node: this.Group.find('.'+this.Group.name())[0],
-      duration: 0.1,
-      easing: Konva.Easings.BackEaseInOut,
-      fill: 'rgb(255, 255, 255)',
-    });
-    var component = this
-    for(var i = 0; i < 3;i++){
-      this.animator.play()
-      await this.sleep(100);
-      this.animator.reverse();
-      await this.sleep(100);
-    }
-  }
-  playColorAnimation(color:string){
-    this.animator = new Konva.Tween({
-      node: this.Group.find('.'+this.Group.name())[0],
-      duration: 0.3,
-      easing: Konva.Easings.BackEaseInOut,
-      fill: color,
-    });
-    this.animator.play();
-  }
-  playReverseColorAnimation(){
-    this.playColorAnimation(this.Color);
   }
 }

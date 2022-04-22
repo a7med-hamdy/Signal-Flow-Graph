@@ -1,22 +1,23 @@
 <header>
-  <div class="operations">
-    <button [disabled]="Choosing || simulating||afterSim" title="Add Node" (click)="add()">
+  <div id = "title"><b>SignalFlowGraph</b></div>
+  <div class="shapes">
+    <button [disabled]="Choosing" title="Add Node" (click)="add()">
       <div class = "button-text">X+</div>
     </button>
 
-    <button [disabled]="Choosing || simulating||afterSim" (click) = "addArrow()">
+    <button [disabled]="Choosing" (click) = "addArrow()">
       <div title="Connect with Arrows"class = "button-text">↗</div>
     </button>
 
-    <button [disabled]="Choosing || simulating||afterSim" (click)="startSimulation()">
-      <div title="Start Simulation" class = "button-text">▶</div>
+    <button [disabled]="Choosing" (click)="startSolving()">
+      <div title="Solve" class = "button-text">=</div>
     </button>
 
-    <button [disabled]="Choosing || simulating||afterSim" (click)="updateGains()">
+    <button [disabled]="Choosing" (click)="updateGains()">
       <div title="Update gains" class = "button-text">🗘</div>
     </button>
 
-    <button [disabled]="Choosing ||simulating" title="Clear all the board" (click)="clearAll()">
+    <button [disabled]="Choosing" title="Clear all the board" (click)="clearAll()">
       <div class = "button-text">⌧</div>
     </button>
 
@@ -25,6 +26,33 @@
 </header>
 <section>
   <div id="container"></div>
+</section>
+<section>
+  <div id="textBox">
+    <table [hidden]="hideResults">
+      <caption>Results</caption>
+      <thead>
+        <tr>
+          <th>Information</th>
+          <th *ngFor="let row of this.results; index as i ">{{i+1}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let header of this.TableHeaders">
+          <th scope="row">{{header}}</th>
+          <td *ngFor=" let row of this.results; index as i ">{{row}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th scope="col" style = "text-align: center;" colspan="2">Matrix</th>
+        </tr>
+        <tr>
+          <td colspan="2" style = "text-align: center;">77</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 </section>
 
 

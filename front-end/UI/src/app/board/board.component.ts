@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import  Konva from 'konva';
-import { WebSocketAPI } from '../WebSocketAPI';
 import { ShapeWithText } from './shapeWithText'
 import { Arrow } from './arrow';
 import { RequestsService } from '../requests/requests.service';
@@ -11,24 +10,21 @@ import { shapeFactory } from './shapeFactory';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
+  TableHeaders:any = ["Paths", "Loops", "Touching Loops", "Answer"];
+  hideResults = true;
   pointers:any[] = [];
   shapes:any[] = [];
   stage!:Konva.Stage;
   layer!:Konva.Layer;
   numOfMs = 0;
-  Choosing = false
-  simulating = false
-  afterSim = false
-  wareHouseQueues:any[] = []
-  webSocketAPI!: WebSocketAPI;
+  Choosing = false;
+  results:any[] = [134324,2234234,3234234,22342344,];
+  wareHouseQueues:any[] = [];
   message: any;
   name: string = '';
   constructor(private req:RequestsService) { }
 
   ngOnInit() {
-    this.webSocketAPI = new WebSocketAPI(this);
-    //connect to backend at start
-    this.connect();
     //create the stage on start
     this.stage = new Konva.Stage({
       container: 'container',
@@ -37,45 +33,7 @@ export class BoardComponent implements OnInit {
     });
     this.layer = new Konva.Layer();//create layer on start
     this.stage.add(this.layer);//add the layer to the stage on start
-    ///this.add();
   }
-/***************************************************************************************************************** */
-  //methods for websocket
-  connect(){
-    this.webSocketAPI._connect();
-  }
-
-  disconnect(){
-    this.webSocketAPI._disconnect();
-  }
-
-  sendMessage(){
-    this.webSocketAPI._send(this.name);
-  }
-
-  handleMessage(message: any){
-    console.log(this.simulating)
-    if(this.simulating){
-      var JSONmessage = JSON.parse(message);
-      console.log(JSONmessage.name);
-      this.updateBoard(JSONmessage);
-      var sum = 0;
-      for(var i = 0; i < this.wareHouseQueues.length;i++){
-        sum += this.wareHouseQueues[i].getProductsNumber();
-        console.log(sum)
-      }
-      if(sum == 10){
-        this.simulating = false;
-        this.afterSim = true;
-        sum = 0;
-        console.log(JSON.stringify([JSON.stringify(this.shapes),JSON.stringify(this.pointers)]))
-      //  this.req.save(JSON.stringify([JSON.stringify(this.shapes),JSON.stringify(this.pointers)]))
-
-      }
-    }
-  }
-  //end of websocket
-/*************************************************************************************************************** */
 
   /***********************Graph Arrays manipulations******************** */
 
@@ -157,16 +115,11 @@ export class BoardComponent implements OnInit {
   /**
    * starts the simulation
    */
-  startSimulation(){
+  startSolving(){
+    this.hideResults = false;
     this.req.validate().subscribe(data =>{
-      if(data == true){
-        this.simulating = true;
-     //   this.req.play().subscribe();
-      }
-      else{
-        this.simulating = false;
-      }
-    })
+
+    });
 
   }
   updateGains(){
@@ -187,10 +140,8 @@ export class BoardComponent implements OnInit {
     this.wareHouseQueues = [];
     this.layer.destroyChildren();
     this.numOfMs = 0;
-    this.simulating = false;
-    this.afterSim = false;
     this.Choosing = false;
-    //this.add();
+    this.hideResults = true;
   }
   /** Adds either M or Q to the board
    *
@@ -253,11 +204,11 @@ export class BoardComponent implements OnInit {
           //get the source and destination shapes
           var x = component.getShapeWithTextFromArray(source);
           var y = component.getShapeWithTextFromArray(destination);
-          var curveoffset = x.getFollowersOut().length;
+          var curveoffset = Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
           var curveHorizontal = 1;
           if(x.IsPointingIn(y.getShapeWithText())){
             curveHorizontal = -1;
-            var curveoffset = x.getFollowersIn().length;
+            curveoffset = Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
           }
           var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //create new arrow component
           //create new arrow component
