@@ -49,11 +49,12 @@ public class RequestsController {
 
     {
         try{
+            // this.SFG.graph.addEdge(from, to);
             if(isNumeric(weight)){ //Numeric weights
-                // this.SFG.graph.setEdgeWeight(this.Graph.graph.addEdge(from, to), Double.valueOf(weight));
+                // this.SFG.graph.setEdgeWeight(this.SFG.graph.getEdge(from, to), Double.valueOf(weight));
             }
             else{ //variable weights
-                // this.SFG.graph.addEdge(from, to, weight);
+                // this.SFG.graph.setEdgeWeight(from, to, weight);
             }
         }
         catch(Exception e){
@@ -89,7 +90,12 @@ public class RequestsController {
     //solves & stores the solution
     @PostMapping("/solve")
     public void solve(){
-        // this.SFG.solve();
+            //solving the signal flow graph
+        // this.SFG.getPaths("", "");
+        // this.SFG.loops = this.SFG.detector.getNonTouchingLoops();
+        // this.SFG.calculatePathFactors();
+        // this.SFG.calculateDeterminant();
+        // this.SFG.calculateGain();
     }
 
     @GetMapping("/solve/forward-paths")
@@ -109,48 +115,21 @@ public class RequestsController {
     @GetMapping("/solve/non-touching-loops")
     public String[] get_non_touching_loops(){
         String[] non_touching_loops = {};
-        // loops = this.SFG.getNonTouchingLoops();
+        // non_touching_loops = this.SFG.getNonTouchingLoops();
         return non_touching_loops;
     }
 
     @GetMapping("/solve/determinants")
-    public String[] get_determinants(){
-        String[] determinants = {};
-        // loops = this.SFG.getDeterminants();
+    public Double[] get_determinants(){
+        Double[] determinants = {};
+        // determinants = this.SFG.getDeterminants();
         return determinants;
     }
 
     @GetMapping("/solve/overall-gain")
     public Double get_overall_gain(){
         double overall_gain = 0;
-        // loops = this.SFG.getOverallGain();
+        // overall_gain = this.SFG.getOverallGain();
         return overall_gain;
     }
-    /* @PostMapping("/save")
-    public void save(@RequestParam("shape") String shapes)
-    {
-        this.graph.setShapes(shapes);
-    }
-    @PostMapping("/load")
-    public String load()
-    {
-        try{
-        this.graph=cTaker.getMemento().getState();
-        }
-        catch(IndexOutOfBoundsException e)
-        {
-            System.out.println("no available replay");
-            
-        }
-        String content = this.graph.getShapes();
-        if(content == null)
-        {
-            return "";
-        }
-        return content;
-    }
-    @PostMapping("/replay")
-    public void replay(){
-        this.graph.replay();
-    } */
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -36,66 +37,53 @@ export class RequestsService {
   /******************************************************************
    * Solution requests                                              *
    ******************************************************************/
+  //checks if it's a valid Signal-Flow-Graph or not 
   validate(){
     return this.http.post<any>(`${this.url}/validate`, {})
   }
 
+  //solves & stores the solution in backend
   solve(){
     return this.http.post<any>(`${this.url}/solve`, {})
   }
 
-  get_forward_paths(){
-    return this.http.get<any>(`${this.url}/solve/forward-paths`)
-    .subscribe(response => { 
-      //store the forward paths
+  get_forward_paths(): Observable<string[]>{
+    return this.http.get<string[]>(`${this.url}/solve/forward-paths`)
+    /* .subscribe(response => { 
+      //store & diplay the forward paths
       console.log(response); 
-    });
+    }); */
   }
 
-  get_loops(){
-    return this.http.get<any>(`${this.url}/solve/loops`)
-    .subscribe(response => { 
-      //store the loops
+  get_loops(): Observable<string[]>{
+    return this.http.get<string[]>(`${this.url}/solve/loops`)
+    /* .subscribe(response => { 
+      //store & diplay the loops
       console.log(response); 
-    });
+    }); */
   }
 
-  get_non_touching_loops(){
-    return this.http.get<any>(`${this.url}/solve/non-touching-loops`)
-    .subscribe(response => { 
-      //store the non-touching-loops
+  get_non_touching_loops(): Observable<string[]>{
+    return this.http.get<string[]>(`${this.url}/solve/non-touching-loops`)
+    /* .subscribe(response => { 
+      //store & diplay the non-touching-loops
       console.log(response); 
-    });
+    }); */
   }
 
-  get_determinants(){
-    return this.http.get<any>(`${this.url}/solve/determinants`)
-    .subscribe(response => { 
-      //store the determinants
+  get_determinants(): Observable<number[]>{
+    return this.http.get<number[]>(`${this.url}/solve/determinants`)
+    /* .subscribe(response => { 
+      //store & diplay the determinants
       console.log(response); 
-    });
+    }); */
   }
 
-  get_overall_gain(){
-    return this.http.get<any>(`${this.url}/solve/overall-gain`)
-    .subscribe(response => { 
-      //store the overall gain
+  get_overall_gain(): Observable<number>{
+    return this.http.get<number>(`${this.url}/solve/overall-gain`)
+    /* .subscribe(response => { 
+      //store & diplay the overall gain
       console.log(response); 
-    });
+    }); */
   }
-  /* 
-  // stop simulation request
-  save(shapes:string){
-    let params = new HttpParams();
-    params = params.append('shape', shapes);
-    return this.http.post<any>(`${this.url}/save`, params).subscribe()
-  }
-  load(){
-    return this.http.post<any>(`${this.url}/load`,{})
-  }
-  // replay a specified simulation request
-  replay(){
-    return this.http.post<any>(`${this.url}/replay`, {})
-  }
-  */
 }
