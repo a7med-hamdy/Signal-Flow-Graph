@@ -13,8 +13,10 @@ export class RequestsService {
   /******************************************************************
    * Craeation & Deletion Signal Floe Graph requests                *
    ******************************************************************/
-  // > Node < creation request
-  add_node(name: string){
+  /**> Node < creation request
+   * @param name the name of the node e.g., x1, x2, x3, ...
+   */
+  addNode(name: string){
     return this.http.post<any>(`${this.url}/+node/${name}`, {})
     .subscribe(data =>{
       console.log(`Node ${name} added`);
@@ -22,22 +24,43 @@ export class RequestsService {
     });
   }
 
-  // > Edge < creation request
-  add_edge(from: string, to: string, weight: number){
-    let info = `/${from}/${to}/${weight}`
+  /**> Edge without weight < creation request
+   * @param from the source node of the edge
+   * @param to   the destination node of the edge
+   */
+  addEdge(from: string, to: string){
+    let info = `/${from}/${to}`
     return this.http.post<any>(`${this.url}/+edge${info}`, {})
     .subscribe(data =>{
-      console.log(`Edge ${from}-${to} with weight ${weight} added`);
+      console.log(`Edge ${from}-${to} added`);
+      console.log(data);
+    });
+  }  
+
+  /**> Edge with weight < creation request
+   * @param from   the source node of the edge
+   * @param to     the destination node of the edge
+   * @param weight the weight of the edge
+   */
+  addEdgeWithWeight(from: string, to: string, weight: number){
+    let info = `/${from}/${to}/${weight}`
+    return this.http.post<any>(`${this.url}/+edge+weight${info}`, {})
+    .subscribe(data =>{
+      console.log(`Edge ${from}-${to} added\nwith weight ${weight}`);
       console.log(data);
     });
   }
 
-  // Edge weight updating request
-  set_edge_weight(from: string, to: string, new_weight: number){
+  /**Edge weight setting/updating request
+   * @param from       the source node of the edge
+   * @param to         the destination node of the edge
+   * @param new_weight the new weight set to the edge
+   */
+  setEdgeWeight(from: string, to: string, new_weight: number){
     let info = `/${from}/${to}/${new_weight}`
-    return this.http.post<any>(`${this.url}/update-edge${info}`, {})
+    return this.http.post<any>(`${this.url}/set-edge-weight${info}`, {})
     .subscribe(data =>{
-      console.log(`Edge ${from}-${to} updated with weight ${new_weight}`);
+      console.log(`Edge ${from}-${to} updated\nwith new weight ${new_weight}`);
       console.log(data);
     });
   }

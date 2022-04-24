@@ -42,9 +42,25 @@ public class RequestsController {
     }
 
     //adding an edge - post request
-    //for example: "/+edge/y1/y2/40" adds an edge from (y1) to (y2) with weight 40
-    @PostMapping("/+edge/{from}/{to}/{weight}")
+    @PostMapping("/+edge/{from}/{to}")
     public boolean add_edge(
+        @PathVariable("from") String from,
+        @PathVariable("to") String to)
+
+    {
+        try{
+            this.SFG.addEdge(from, to);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    //adding an edge with weight - post request
+    @PostMapping("/+edge+weight/{from}/{to}/{weight}")
+    public boolean add_edge_and_weight(
         @PathVariable("from") String from,
         @PathVariable("to") String to,
         @PathVariable("weight") String weight)
@@ -65,20 +81,20 @@ public class RequestsController {
         return true;
     }
 
-    //setting an edge weight - post request
-    @PostMapping("/update-edge/{from}/{to}/{weight}")
+    //setting/updating an edge weight - post request
+    @PostMapping("/set-edge-weight/{from}/{to}/{new_weight}")
     public boolean set_edge_weight(
         @PathVariable("from") String from,
         @PathVariable("to") String to,
-        @PathVariable("weight") String weight)
+        @PathVariable("new_weight") String new_weight)
 
     {
         try{
-            if(isNumeric(weight)){ //Numeric weights
-                this.SFG.setEdgeWeight(from, to, Double.valueOf(weight));
+            if(isNumeric(new_weight)){ //Numeric weights
+                this.SFG.setEdgeWeight(from, to, Double.valueOf(new_weight));
             }
             else{ //variable weights
-                // this.SFG.setEdgeWeight(from, to, weight);
+                // this.SFG.setEdgeWeight(from, to, new_weight);
             }
         }
         catch(Exception e){
