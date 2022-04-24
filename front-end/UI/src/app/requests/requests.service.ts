@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -16,7 +15,8 @@ export class RequestsService {
    ******************************************************************/
   // > Node < creation request
   add_node(name: string){
-    return this.http.post<any>(`${this.url}/+node/${name}`, {}).subscribe(data =>{
+    return this.http.post<any>(`${this.url}/+node/${name}`, {})
+    .subscribe(data =>{
       console.log(`Node ${name} added`);
       console.log(data);
     });
@@ -25,15 +25,27 @@ export class RequestsService {
   // > Edge < creation request
   add_edge(from: string, to: string, weight: number){
     let info = `/${from}/${to}/${weight}`
-    return this.http.post<any>(`${this.url}/+edge${info}`, {}).subscribe(data =>{
+    return this.http.post<any>(`${this.url}/+edge${info}`, {})
+    .subscribe(data =>{
       console.log(`Edge ${from}-${to} with weight ${weight} added`);
+      console.log(data);
+    });
+  }
+
+  // Edge weight updating request
+  set_edge_weight(from: string, to: string, new_weight: number){
+    let info = `/${from}/${to}/${new_weight}`
+    return this.http.post<any>(`${this.url}/update-edge${info}`, {})
+    .subscribe(data =>{
+      console.log(`Edge ${from}-${to} updated with weight ${new_weight}`);
       console.log(data);
     });
   }
 
   // clear the whole graph request
   clear(){
-    return this.http.delete<any>(`${this.url}/clear`).subscribe(data =>{
+    return this.http.delete<any>(`${this.url}/clear`)
+    .subscribe(data =>{
       console.log("Graph deleted !!");
       console.log(data);
     });

@@ -23,10 +23,12 @@ public class RequestsController {
         }
         return pattern.matcher(strNum).matches();
     }
-    /**************************************************
-     * Craeation Graph requests                       *
-     **************************************************/
-    //adding a node post request
+
+
+    /****************************************************************
+     * Craeation Graph requests                                     *
+     ****************************************************************/
+    //adding a node - post request
     @PostMapping("/+node/{name}")
     public boolean add_node(@PathVariable("name") String name){
         try{
@@ -39,7 +41,7 @@ public class RequestsController {
         return true;
     }
 
-    //adding an edge post request
+    //adding an edge - post request
     //for example: "/+edge/y1/y2/40" adds an edge from (y1) to (y2) with weight 40
     @PostMapping("/+edge/{from}/{to}/{weight}")
     public boolean add_edge(
@@ -63,6 +65,30 @@ public class RequestsController {
         return true;
     }
 
+    //setting an edge weight - post request
+    @PostMapping("/update-edge/{from}/{to}/{weight}")
+    public boolean set_edge_weight(
+        @PathVariable("from") String from,
+        @PathVariable("to") String to,
+        @PathVariable("weight") String weight)
+
+    {
+        try{
+            if(isNumeric(weight)){ //Numeric weights
+                this.SFG.setEdgeWeight(from, to, Double.valueOf(weight));
+            }
+            else{ //variable weights
+                // this.SFG.setEdgeWeight(from, to, weight);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
     //clear the whole graph to draw another one - delete request
     @DeleteMapping("/clear")
     public boolean clearGraph(){
@@ -77,9 +103,9 @@ public class RequestsController {
     }
 
 
-    /**************************************************
-     * Solution requests                              *
-     **************************************************/
+    /****************************************************************
+     * Solution requests                                            *
+     ****************************************************************/
     //checks if it's a valid Signal-Flow-Graph or not 
     @PostMapping("/validate")
     public boolean validate(){
@@ -91,11 +117,6 @@ public class RequestsController {
     @PostMapping("/solve")
     public void solve(){
         //solving the signal flow graph
-        // this.SFG.getPaths();
-        // this.SFG.loops = this.SFG.detector.getNonTouchingLoops();
-        // this.SFG.calculatePathFactors();
-        // this.SFG.calculateDeterminant();
-        // this.SFG.calculateGain();
     }
  */
     //forward paths get request
