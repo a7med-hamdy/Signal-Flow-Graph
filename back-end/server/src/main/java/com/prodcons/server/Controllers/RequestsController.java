@@ -86,6 +86,7 @@ public class RequestsController {
         return /* this.SFG.valdiateGraph() */ true;
     }
     
+   /*  
     //solves & stores the solution
     @PostMapping("/solve")
     public void solve(){
@@ -96,7 +97,7 @@ public class RequestsController {
         // this.SFG.calculateDeterminant();
         // this.SFG.calculateGain();
     }
-
+ */
     //forward paths get request
     @GetMapping("/solve/forward-paths")
     public String get_forward_paths(){
@@ -161,7 +162,7 @@ public class RequestsController {
     @GetMapping("/solve/overall-gain")
     public String get_overall_gain(){
         try{
-            return /* this.SFG.getOverallGain() */ null;
+            return this.SFG.getOverallGain();
         }
         catch(Exception e){
             e.printStackTrace();

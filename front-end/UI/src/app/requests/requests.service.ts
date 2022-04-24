@@ -47,11 +47,14 @@ export class RequestsService {
     return this.http.post<any>(`${this.url}/validate`, {})
   }
 
+  /* 
   //solves & stores the solution in backend
   solve(){
     return this.http.post<any>(`${this.url}/solve`, {})
   }
+ */
 
+  //gets the list of all forward paths
   get_forward_paths(){
     return this.http.get<any>(`${this.url}/solve/forward-paths`)
     /* .subscribe(response => { 
@@ -60,6 +63,7 @@ export class RequestsService {
     }); */
   }
 
+  //gets the list of all loops detected in the graph
   get_loops(){
     return this.http.get<any>(`${this.url}/solve/loops`)
     /* .subscribe(response => { 
@@ -68,6 +72,7 @@ export class RequestsService {
     }); */
   }
 
+  //gets the lists of different combinations of all non-touching loops
   get_non_touching_loops(){
     return this.http.get<any>(`${this.url}/solve/non-touching-loops`)
     /* .subscribe(response => { 
@@ -76,6 +81,7 @@ export class RequestsService {
     }); */
   }
 
+  //gets the list of the determinants of each forward path
   get_paths_determinants(){
     return this.http.get<any>(`${this.url}/solve/paths-determinants`)
     /* .subscribe(response => { 
@@ -84,6 +90,7 @@ export class RequestsService {
     }); */
   }
 
+  //gets the determinant of the system
   get_determinant(){
     return this.http.get<any>(`${this.url}/solve/determinant`)
     /* .subscribe(response => { 
@@ -92,6 +99,7 @@ export class RequestsService {
     }); */
   }
 
+  //gets the overall gain of the system (the result)
   get_overall_gain(){
     return this.http.get<any>(`${this.url}/solve/overall-gain`)
     /* .subscribe(response => { 
