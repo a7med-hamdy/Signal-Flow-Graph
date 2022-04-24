@@ -17,6 +17,7 @@ export class RequestsService {
   // > Node < creation request
   add_node(name: string){
     return this.http.post<any>(`${this.url}/+node/${name}`, {}).subscribe(data =>{
+      console.log(`Node ${name} added`);
       console.log(data);
     });
   }
@@ -24,12 +25,16 @@ export class RequestsService {
   // > Edge < creation request
   add_edge(from: string, to: string, weight: number){
     let info = `/${from}/${to}/${weight}`
-    return this.http.post<any>(`${this.url}/+edge${info}`, {});
+    return this.http.post<any>(`${this.url}/+edge${info}`, {}).subscribe(data =>{
+      console.log(`Edge ${from}-${to} with weight ${weight} added`);
+      console.log(data);
+    });
   }
 
   // clear the whole graph request
   clear(){
     return this.http.delete<any>(`${this.url}/clear`).subscribe(data =>{
+      console.log("Graph deleted !!");
       console.log(data);
     });
   }
@@ -47,40 +52,48 @@ export class RequestsService {
     return this.http.post<any>(`${this.url}/solve`, {})
   }
 
-  get_forward_paths(): Observable<string[]>{
-    return this.http.get<string[]>(`${this.url}/solve/forward-paths`)
+  get_forward_paths(){
+    return this.http.get<any>(`${this.url}/solve/forward-paths`)
     /* .subscribe(response => { 
       //store & diplay the forward paths
       console.log(response); 
     }); */
   }
 
-  get_loops(): Observable<string[]>{
-    return this.http.get<string[]>(`${this.url}/solve/loops`)
+  get_loops(){
+    return this.http.get<any>(`${this.url}/solve/loops`)
     /* .subscribe(response => { 
       //store & diplay the loops
       console.log(response); 
     }); */
   }
 
-  get_non_touching_loops(): Observable<string[]>{
-    return this.http.get<string[]>(`${this.url}/solve/non-touching-loops`)
+  get_non_touching_loops(){
+    return this.http.get<any>(`${this.url}/solve/non-touching-loops`)
     /* .subscribe(response => { 
       //store & diplay the non-touching-loops
       console.log(response); 
     }); */
   }
 
-  get_determinants(): Observable<number[]>{
-    return this.http.get<number[]>(`${this.url}/solve/determinants`)
+  get_paths_determinants(){
+    return this.http.get<any>(`${this.url}/solve/paths-determinants`)
     /* .subscribe(response => { 
       //store & diplay the determinants
       console.log(response); 
     }); */
   }
 
-  get_overall_gain(): Observable<number>{
-    return this.http.get<number>(`${this.url}/solve/overall-gain`)
+  get_determinant(){
+    return this.http.get<any>(`${this.url}/solve/determinant`)
+    /* .subscribe(response => { 
+      //store & diplay the determinant
+      console.log(response); 
+    }); */
+  }
+
+  get_overall_gain(){
+    return this.http.get<any>(`${this.url}/solve/overall-gain`)
     /* .subscribe(response => { 
       //store & diplay the overall gain
       console.log(response); 

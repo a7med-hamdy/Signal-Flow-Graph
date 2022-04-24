@@ -134,8 +134,8 @@ public class RequestsController {
     }
 
     //determinants get request
-    @GetMapping("/solve/determinants(path-factors)")
-    public String get_determinants(){
+    @GetMapping("/solve/paths-determinants")
+    public String get_paths_determinants(){
         try{
             return this.SFG.calculatePathFactors();
         }
@@ -146,7 +146,7 @@ public class RequestsController {
     }
 
     //determinant get request
-    @GetMapping("/solve/determinants")
+    @GetMapping("/solve/determinant")
     public String get_determinant(){
         try{
             return this.SFG.calculateDeterminant();
