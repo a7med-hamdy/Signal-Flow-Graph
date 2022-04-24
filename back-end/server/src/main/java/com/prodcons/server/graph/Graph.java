@@ -20,33 +20,33 @@ public class Graph {
     private String endVertex = null;
     private double determinant = 1;
     public Graph (){
-        this.graph.addVertex("v1");
-        this.graph.addVertex("v2");
-        this.graph.addVertex("v3");
-        this.graph.addVertex("v4");
-        this.graph.addVertex("v5");
-        this.graph.addVertex("v6");
-        this.graph.addVertex("v7");
-        this.graph.addVertex("v8");
-        this.graph.addEdge("v1", "v2");
-        this.graph.addEdge("v2", "v3");
-        this.graph.addEdge("v3", "v4");
-        this.graph.addEdge("v4", "v1");
-        this.graph.addEdge("v4", "v5");
-        this.graph.addEdge("v5", "v6");
-        this.graph.addEdge("v6", "v5");
-        this.graph.addEdge("v3", "v1");
-        this.graph.addEdge("v6", "v7");
-        this.graph.addEdge("v7", "v8");
-        this.graph.addEdge("v8", "v7");
-        this.graph.setEdgeWeight(this.graph.getEdge("v7", "v8"), 5);
-        this.graph.setEdgeWeight(this.graph.getEdge("v1", "v2"), 2);
-        this.graph.setEdgeWeight(this.graph.getEdge("v4", "v1"), 3);
-        getPaths();
-        loops = this.detector.getNonTouchingLoops();
-        this.getAllLoops();
-        calculatePathFactors();
-        calculateDeterminant();
+        // this.graph.addVertex("v1");
+        // this.graph.addVertex("v2");
+        // this.graph.addVertex("v3");
+        // this.graph.addVertex("v4");
+        // this.graph.addVertex("v5");
+        // this.graph.addVertex("v6");
+        // this.graph.addVertex("v7");
+        // this.graph.addVertex("v8");
+        // this.graph.addEdge("v1", "v2");
+        // this.graph.addEdge("v2", "v3");
+        // this.graph.addEdge("v3", "v4");
+        // this.graph.addEdge("v4", "v1");
+        // this.graph.addEdge("v4", "v5");
+        // this.graph.addEdge("v5", "v6");
+        // this.graph.addEdge("v6", "v5");
+        // this.graph.addEdge("v3", "v1");
+        // this.graph.addEdge("v6", "v7");
+        // this.graph.addEdge("v7", "v8");
+        // this.graph.addEdge("v8", "v7");
+        // this.graph.setEdgeWeight(this.graph.getEdge("v7", "v8"), 5);
+        // this.graph.setEdgeWeight(this.graph.getEdge("v1", "v2"), 2);
+        // this.graph.setEdgeWeight(this.graph.getEdge("v4", "v1"), 3);
+        // getPaths();
+        // loops = this.detector.getNonTouchingLoops();
+        // this.getAllLoops();
+        // calculatePathFactors();
+        // calculateDeterminant();
     }
 
     public void addVertex(String v)
@@ -220,7 +220,18 @@ public class Graph {
         // System.out.println("d = " + determinant);
         return Double.toString(determinant);
     }
-
+    public String getOverallGain()
+    {
+        double sum = 0;
+        int i = 0;
+        for(double gain : this.pathsGain)
+        {
+            sum += gain*this.pathFactor.get(i);
+            i++;
+        }
+        double answer = sum / determinant;
+        return Double.toString(answer);
+    }
 
 
     private double getGain(List<String> path)
