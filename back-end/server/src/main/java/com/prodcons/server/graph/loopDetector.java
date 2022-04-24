@@ -15,9 +15,9 @@ public class loopDetector {
         this.graph = graph;
         this.detector = new HawickJamesSimpleCycles<>(graph);
     }
-    public List<List<List<String>>> getLoops()
+    public List<List<String>> getLoops()
     {
-        return this.getNonTouchingLoops();
+        return this.detector.findSimpleCycles();
     }
 
     public List<List<List<String>>> getNonTouchingLoops()
