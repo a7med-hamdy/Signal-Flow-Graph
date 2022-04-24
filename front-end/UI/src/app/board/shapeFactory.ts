@@ -4,19 +4,21 @@ import { ShapeWithText } from "./shapeWithText";
 
 export class shapeFactory{
 
-  /**
-   * buildNode
-   */
   constructor(){
 
   }
+  /**
+   *
+   * @param x position
+   * @param y position
+   * @param numOfMs current number of nodes
+   * @param color color of the node
+   * @returns full shape with Text object
+   */
   static buildNode(x:number, y:number,numOfMs: number, color:string) {
     var shape;
     var text1;
     var Group;
-    //if M
-      //this.req.addMachine();
-      console.log("add Ms");
       shape = new Konva.Circle({
         name: 'X'+numOfMs.toString(),
         x:x,
@@ -44,15 +46,17 @@ export class shapeFactory{
       offsetX: shape.x(),
       offsetY:shape.y()
     });
-    Group.add(shape)
-    Group.add(text1)
-    var FrontArrows: any[] = [];
-    var BackArrows: any[] = [];
+    Group.add(shape);  Group.add(text1);
+    var FrontArrows: any[] = [];    var BackArrows: any[] = [];
 
     var SwithT = new ShapeWithText(Group,text1,BackArrows,FrontArrows,color);
     return SwithT;
   }
 
+  /**
+   * builds an editable konva text
+   * @returns konva text object
+   */
   public static buildEditableText(){
     var textNode:any = new Konva.Text({
       text:'0',
@@ -214,7 +218,15 @@ export class shapeFactory{
     return textNode;
   }
 
-
+/**
+ *  Builds a konva arrow object
+ * @param src source node
+ * @param dst destination node
+ * @param text text to write on the arrow
+ * @param offset offset of curve varies from high curves to straightlines
+ * @param curveup curves upward or downward
+ * @returns konva arrow object
+ */
   public static buildArrow(src:Konva.Group, dst:Konva.Group, text:Konva.Text, offset:number, curveup:number){
 
     var startoffset = 20; var endoffset = -20;
@@ -262,6 +274,14 @@ export class shapeFactory{
     dst.on('dragmove',Follow);
     return arrow;
   }
+  /**
+   *
+   * @param src source
+   * @param dst destination
+   * @param offset offset of curve varies from high curves to straightlines
+   * @param curveup curves upward or downward
+   * @returns arrow object
+   */
   public static buildBranch(src:Konva.Group, dst: Konva.Group,offset:number, curveup:number){
     var text = this.buildEditableText();
     var arrow = this.buildArrow(src, dst,text,offset,curveup);
