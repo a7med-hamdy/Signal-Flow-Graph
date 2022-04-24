@@ -1,8 +1,16 @@
 <header>
   <div id = "title"><b>SignalFlowGraph</b></div>
   <div class="shapes">
-    <button [disabled]="Choosing" title="Add Node" (click)="add()">
+    <button [disabled]="Choosing" title="Add Node" (click)="add('node','white')">
       <div class = "button-text">X+</div>
+    </button>
+
+    <button [disabled]="Choosing || hasSource" title="Add source" (click)="add('source','yellow')">
+      <div class = "button-text">Src+</div>
+    </button>
+
+    <button [disabled]="Choosing || hasSink" title="Add sink" (click)="add('sink','orange')">
+      <div class = "button-text">Sink+</div>
     </button>
 
     <button [disabled]="Choosing" (click) = "addArrow()">

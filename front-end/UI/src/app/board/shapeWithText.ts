@@ -2,7 +2,6 @@ import Konva from 'konva'
 export class ShapeWithText{
   text2!:Konva.Text;
   Group!:Konva.Group;
-  Products!:number;
   Color!:string;
   InArrows: any[] = [];
   OutArrows: any[] = [];
@@ -19,20 +18,17 @@ export class ShapeWithText{
               text2:any =null,
               InArrows:any[],
               OutArrows:any[],
-              Color:string,
-              Products:number)
+              Color:string,)
     {
     this.Group =Group;
     this.text2 = text2;
     this.InArrows = InArrows;
     this.OutArrows = OutArrows;
     this.Color = Color;
-    this.Products = Products;
 
   }
 
   getShapeWithText(){return this.Group;}
-  getProductsNumber(){return this.Products;}
   getFollowersOut(){return this.OutArrows;}
   getFollowersIn(){return this.InArrows;}
 

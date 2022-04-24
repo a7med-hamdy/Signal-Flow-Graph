@@ -10,16 +10,19 @@ import { shapeFactory } from './shapeFactory';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  TableHeaders:any = ["Paths", "Loops", "Touching Loops", "Answer"];
-  hideResults = true;
+  TableHeaders:any = ["Paths", "Loops", "none touching Loops", "Answer"];
+  hideResults = true; Choosing = false; hasSource = false;  hasSink = false;
+  sourceNode!:any;  sinkNode!:any;
   pointers:any[] = [];
   shapes:any[] = [];
+  paths:any[] = [];
+  loops:any[] = [];
+  noneTouchingLoops:any[] = [];
+  answer:any[] = [];
   stage!:Konva.Stage;
   layer!:Konva.Layer;
   numOfMs = 0;
-  Choosing = false;
-  results:any[] = [134324,2234234,3234234,22342344,];
-  wareHouseQueues:any[] = [];
+  results:any[] = [];
   message: any;
   name: string = '';
   constructor(private req:RequestsService) { }
@@ -64,63 +67,27 @@ export class BoardComponent implements OnInit {
 
   /**********************************************BOARD FUNCTIONS************************************************** */
   /**
-   * loads boardfrom backend
-   */
-  /*loadBoard(){
-    this.req.load().subscribe(data =>{
-      if(data == null){
-        this.simulating = false;
-        console.log(this.simulating)
-        console.log(data)
-        return;
-      }
-      this.simulating = true
-      this.shapes = []
-      this.pointers = []
-      this.wareHouseQueues = []
-      this.layer.destroyChildren()
-      console.log(data)
-      data[0] = JSON.parse(data[0])
-      data[1] = JSON.parse(data[1])
-      for(var i = 0 ; i < data[0].length;i++){
-        if(data[0][i].text2 != null){
-          var s = new ShapeWithText(Konva.Node.create(JSON.parse(data[0][i].Group)),
-                                    Konva.Node.create(JSON.parse(data[0][i].text2)),
-                                    data[0][i].InArrows,data[0][i].OutArrows,data[0][i].Color,data[0][i].Products)
-          this.shapes.push(s);
-          this.layer.add(s.getShapeWithText());
-          s.updateProductsNumber(0);
-        }
-        else{
-          var s = new ShapeWithText(Konva.Node.create(JSON.parse(data[0][i].Group)),
-                                    null,
-                                    data[0][i].InArrows,data[0][i].OutArrows,data[0][i].Color,data[0][i].Products)
-          this.shapes.push(s);
-          s.updateProductsNumber(0);
-          this.layer.add(s.getShapeWithText());
-        }
-      }
-
-      for(var i = 0; i < data[1].length;i++){
-        var src = Konva.Node.create(JSON.parse(data[1][i].Source))
-        var dst = Konva.Node.create(JSON.parse(data[1][i].Destination))
-        var arrow = new Arrow(this.getShapeWithTextFromArrayByName(src.name()).getShapeWithText(),
-                    this.getShapeWithTextFromArrayByName(dst.name()).getShapeWithText())
-        this.pointers.push(arrow);
-        this.layer.add(arrow.getArrow());
-      }
-    });
-    return 0;
-  }*/
-  /**
    * starts the simulation
    */
   startSolving(){
     this.hideResults = false;
-    this.req.validate().subscribe(data =>{
-
+    this.req.validate().subscribe(data =>{    });
+    this.req.get_forward_paths().subscribe(data =>{
+      this.paths.push(data);
+      this.results.push(this.paths);
+    })
+    this.req.get_loops().subscribe(data =>{
+      this.loops.push(data);
+      this.results.push(this.loops);
     });
-
+    this.req.get_non_touching_loops().subscribe(data =>{
+      this.noneTouchingLoops.push(data);
+      this.results.push(this.noneTouchingLoops);
+    });
+    this.req.get_overall_gain().subscribe(data => {
+      this.answer.push(data);
+      this.results.push(this.answer);
+    });
   }
   updateGains(){
     var arr = [];
@@ -135,19 +102,18 @@ export class BoardComponent implements OnInit {
    */
   clearAll(){
     this.req.clear();
-    this.shapes = [];
-    this.pointers = [];
-    this.wareHouseQueues = [];
+    this.shapes = []; this.pointers = []; this.results = [];  this.paths = [];
+    this.loops = [];  this.noneTouchingLoops = [];  this.answer = [];
     this.layer.destroyChildren();
     this.numOfMs = 0;
-    this.Choosing = false;
-    this.hideResults = true;
+    this.Choosing = false;    this.hasSource = false;   this.hasSink = false;   this.hideResults = true;
+    this.sourceNode = null;   this.sinkNode = null;
   }
-  /** Adds either M or Q to the board
+  /** Adds node to the board
    *
    *
    */
-  add(){
+  add(name:string, color:string){
     var pos:any;
     this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"})
     this.stage.on("click", ()=>{
@@ -155,14 +121,16 @@ export class BoardComponent implements OnInit {
       this.stage.container().style.cursor = "default";
       this.stage.off("mouseenter");
       this.stage.off("click");
-      var sWithT:any = shapeFactory.buildNode(pos.x,pos.y,this.numOfMs);
-      console.log(sWithT)
-      var a = JSON.parse(JSON.stringify(sWithT))
+      var sWithT:any = shapeFactory.buildNode(pos.x,pos.y,this.numOfMs,color);
+      if(name == "source")
+        this.sourceNode = sWithT;
+      if(name == "sink")
+        this.sinkNode = sWithT;
       this.shapes.push(sWithT);
       this.layer.add(sWithT.getShapeWithText());
-      this.numOfMs++
+      this.numOfMs++;
+      this.req.addNode(sWithT.getShapeWithText().name());
     });
-
 
   }
 
@@ -217,17 +185,16 @@ export class BoardComponent implements OnInit {
 
           component.pointers.push(arrow);    //add the arrow to the shapes's arrays
           component.layer.add(arrow.getBranch());  //add arrow to the layer to display
-          console.log(JSON.parse(JSON.stringify(component.pointers)))
+          component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), Number(arrow.getText().text()));
         }
         catch{
           component.Choosing=false
           component.stage.off('click');
           component.stage.off("mouseenter");
           component.stage.container().style.cursor = "default";
-          return
+          return;
         }
         }
-
         component.Choosing=false
         component.stage.off('click');
         component.stage.off("mouseenter");
@@ -237,27 +204,4 @@ export class BoardComponent implements OnInit {
 
   }
 
-  async updateBoard(message:any){
-    if(message.name.includes('M')){
-      var Machine = this.getShapeWithTextFromArrayByName(message.name);
-      if(message.change.includes('flash')){
-        await Machine.playFlashAnimation();
-        Machine.playReverseColorAnimation();
-
-      }
-      else{
-        Machine.playColorAnimation(message.change);
-      }
-    }
-    else{
-      var Queue = this.getShapeWithTextFromArrayByName(message.name);
-      if(message.change == 'empty'){
-        this.wareHouseQueues.push(Queue);
-      }
-      else{
-        Queue.updateProductsNumber(message.change);
-      }
-    }
-
-  }
 }

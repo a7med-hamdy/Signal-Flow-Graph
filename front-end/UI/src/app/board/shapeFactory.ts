@@ -10,10 +10,9 @@ export class shapeFactory{
   constructor(){
 
   }
-  static buildNode(x:number, y:number,numOfMs: number) {
+  static buildNode(x:number, y:number,numOfMs: number, color:string) {
     var shape;
     var text1;
-    var color = 'white';
     var Group;
     //if M
       //this.req.addMachine();
@@ -50,7 +49,7 @@ export class shapeFactory{
     var FrontArrows: any[] = [];
     var BackArrows: any[] = [];
 
-    var SwithT = new ShapeWithText(Group,text1,BackArrows,FrontArrows,color,0);
+    var SwithT = new ShapeWithText(Group,text1,BackArrows,FrontArrows,color);
     return SwithT;
   }
 
