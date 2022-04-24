@@ -26,11 +26,11 @@ public class RequestsController {
     /**************************************************
      * Craeation Graph requests                       *
      **************************************************/
-    //adding a node request
+    //adding a node post request
     @PostMapping("/+node/{name}")
     public boolean add_node(@PathVariable("name") String name){
         try{
-            // this.SFG.graph.addVertex(name);
+            this.SFG.addVertex(name);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class RequestsController {
         return true;
     }
 
-    //adding an edge request
+    //adding an edge post request
     //for example: "/+edge/y1/y2/40" adds an edge from (y1) to (y2) with weight 40
     @PostMapping("/+edge/{from}/{to}/{weight}")
     public boolean add_edge(
@@ -49,12 +49,11 @@ public class RequestsController {
 
     {
         try{
-            // this.SFG.graph.addEdge(from, to);
             if(isNumeric(weight)){ //Numeric weights
-                // this.SFG.graph.setEdgeWeight(this.SFG.graph.getEdge(from, to), Double.valueOf(weight));
+                this.SFG.addEdge(from, to, Double.valueOf(weight));
             }
             else{ //variable weights
-                // this.SFG.graph.setEdgeWeight(from, to, weight);
+                // this.SFG.addEdge(from, to, weight);
             }
         }
         catch(Exception e){
@@ -64,7 +63,7 @@ public class RequestsController {
         return true;
     }
 
-    //clear the whole graph to draw another one
+    //clear the whole graph to draw another one - delete request
     @DeleteMapping("/clear")
     public boolean clearGraph(){
         try{
@@ -90,46 +89,83 @@ public class RequestsController {
     //solves & stores the solution
     @PostMapping("/solve")
     public void solve(){
-            //solving the signal flow graph
-        // this.SFG.getPaths("", "");
+        //solving the signal flow graph
+        // this.SFG.getPaths();
         // this.SFG.loops = this.SFG.detector.getNonTouchingLoops();
         // this.SFG.calculatePathFactors();
         // this.SFG.calculateDeterminant();
         // this.SFG.calculateGain();
     }
 
+    //forward paths get request
     @GetMapping("/solve/forward-paths")
-    public String[] get_forward_paths(){
-        String[] forward_paths = {};
-        // forward_paths = this.SFG.getForwardPaths();
-        return forward_paths;
+    public String get_forward_paths(){
+        try{
+            return this.SFG.getPaths();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    //loops get request
     @GetMapping("/solve/loops")
-    public String[] get_loops(){
-        String[] loops = {};
-        // loops = this.SFG.getLoops();
-        return loops;
+    public String get_loops(){
+        try{
+            return this.SFG.getAllLoops();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    //Non touching loops get request
     @GetMapping("/solve/non-touching-loops")
-    public String[] get_non_touching_loops(){
-        String[] non_touching_loops = {};
-        // non_touching_loops = this.SFG.getNonTouchingLoops();
-        return non_touching_loops;
+    public String get_non_touching_loops(){
+        try{
+            return this.SFG.getLoopsClassified();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    //determinants get request
+    @GetMapping("/solve/determinants(path-factors)")
+    public String get_determinants(){
+        try{
+            return this.SFG.calculatePathFactors();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //determinant get request
     @GetMapping("/solve/determinants")
-    public Double[] get_determinants(){
-        Double[] determinants = {};
-        // determinants = this.SFG.getDeterminants();
-        return determinants;
+    public String get_determinant(){
+        try{
+            return this.SFG.calculateDeterminant();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    //Overall gain (the result) get request
     @GetMapping("/solve/overall-gain")
-    public Double get_overall_gain(){
-        double overall_gain = 0;
-        // overall_gain = this.SFG.getOverallGain();
-        return overall_gain;
+    public String get_overall_gain(){
+        try{
+            return /* this.SFG.getOverallGain() */ null;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
