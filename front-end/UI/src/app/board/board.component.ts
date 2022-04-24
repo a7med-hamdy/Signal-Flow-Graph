@@ -71,6 +71,7 @@ export class BoardComponent implements OnInit {
    */
   startSolving(){
     this.hideResults = false;
+    this.updateGains();
     this.req.validate().subscribe(data =>{    });
     this.req.get_forward_paths().subscribe(data =>{
       this.paths.push(data);
@@ -90,11 +91,9 @@ export class BoardComponent implements OnInit {
     });
   }
   updateGains(){
-    var arr = [];
     for(var i = 0; i < this.pointers.length;i++){
-        arr.push([this.pointers[i].getSource().name(), this.pointers[i].getDestination().name(), this.pointers[i].getText().text()]);
+        this.req.setEdgeWeight(this.pointers[i].getSource().name(), this.pointers[i].getDestination().name(), this.pointers[i].getText().text());
     }
-    console.log(arr);
     //update your gains here using the array;
   }
   /**
