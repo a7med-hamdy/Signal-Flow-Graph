@@ -135,6 +135,11 @@ export class BoardComponent implements OnInit {
       this.stage.off("mouseenter");
       this.stage.off("click");
       var sWithT:any = shapeFactory.buildNode(pos.x,pos.y,this.numOfMs,color);
+
+      this.shapes.push(sWithT);
+      this.layer.add(sWithT.getShapeWithText());
+      this.numOfMs++;
+      this.req.addNode(sWithT.getShapeWithText().name());
       if(name == "source"){
         this.sourceNode = sWithT;
         this.hasSource = true;
@@ -145,10 +150,6 @@ export class BoardComponent implements OnInit {
         this.hasSink = true;
         this.req.setOutputNode(sWithT.getShapeWithText().name());
       }
-      this.shapes.push(sWithT);
-      this.layer.add(sWithT.getShapeWithText());
-      this.numOfMs++;
-      this.req.addNode(sWithT.getShapeWithText().name());
     });
 
   }
