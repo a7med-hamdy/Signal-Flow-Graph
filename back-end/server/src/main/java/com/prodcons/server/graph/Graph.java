@@ -52,12 +52,10 @@ public class Graph {
     public void addVertex(String v)
     {
         this.graph.addVertex(v);
-        if(this.startVertex == null)
-        {
-            startVertex = v;
-        }
-        this.endVertex = v;
     }
+
+    public void setStartVertex(String v){ this.startVertex = v; }
+    public void setEndVertex(String v)  { this.endVertex = v;   }
 
     public void addEdge(String source, String destination, double weight)
     {

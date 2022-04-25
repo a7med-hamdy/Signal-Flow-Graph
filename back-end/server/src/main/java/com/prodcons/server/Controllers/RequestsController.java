@@ -41,6 +41,32 @@ public class RequestsController {
         return true;
     }
 
+    //sets the input node
+    @PostMapping("/input-node/{name}")
+    public boolean set_input_node(@PathVariable("name") String name){
+        try{
+            this.SFG.setStartVertex(name);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    //sets the output node
+    @PostMapping("/output-node/{name}")
+    public boolean set_output_node(@PathVariable("name") String name){
+        try{
+            this.SFG.setEndVertex(name);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     //adding an edge - post request
     @PostMapping("/+edge/{from}/{to}")
     public boolean add_edge(
