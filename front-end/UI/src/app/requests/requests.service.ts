@@ -104,12 +104,19 @@ export class RequestsService {
     return this.http.post<any>(`${this.url}/validate`, {})
   }
 
-  /* 
+  
   //solves & stores the solution in backend
   solve(){
     return this.http.post<any>(`${this.url}/solve`, {})
+    /* .subscribe(done => { 
+          if(done) 
+            console.log("Solved successfully.")
+          else
+            console.log("ERROR: not solved!!")
+          
+    }); */
   }
- */
+
 
   //gets the list of all forward paths
   get_forward_paths(){

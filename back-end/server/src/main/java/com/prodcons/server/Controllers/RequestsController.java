@@ -1,6 +1,4 @@
 package com.prodcons.server.Controllers;
-import java.util.regex.Pattern;
-
 import com.prodcons.server.graph.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,7 +6,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class RequestsController {
     Graph SFG = new Graph();
-
+    public String forward_paths;
+    public String loops;
+    public String non_touching_loops;
+    public String paths_determinants;
+    public String determinant;
+    public String overall_gain;
 
     /****************************************************************
      * Craeation Graph requests                                     *
@@ -129,82 +132,59 @@ public class RequestsController {
         return /* this.SFG.valdiateGraph() */ true;
     }
     
-   /*  
+    
     //solves & stores the solution
     @PostMapping("/solve")
-    public void solve(){
+    public boolean solve(){
         //solving the signal flow graph
-    }
- */
-    //forward paths get request
-    @GetMapping("/solve/forward-paths")
-    public String get_forward_paths(){
         try{
-            return this.SFG.getPaths();
+            this.forward_paths      = this.SFG.getPaths();
+            this.loops              = this.SFG.getAllLoops();
+            this.non_touching_loops = this.SFG.getLoopsClassified();
+            this.paths_determinants = this.SFG.calculatePathFactors();
+            this.determinant        = this.SFG.calculateDeterminant();
+            this.overall_gain       = this.SFG.getOverallGain();
+            return true;
         }
         catch(Exception e){
             e.printStackTrace();
         }
-        return null;
+        return false;
+    }
+
+    //forward paths get request
+    @GetMapping("/solve/forward-paths")
+    public String get_forward_paths(){
+        return this.forward_paths;
     }
 
     //loops get request
     @GetMapping("/solve/loops")
     public String get_loops(){
-        try{
-            return this.SFG.getAllLoops();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return this.loops;
     }
 
     //Non touching loops get request
     @GetMapping("/solve/non-touching-loops")
     public String get_non_touching_loops(){
-        try{
-            return this.SFG.getLoopsClassified();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return this.non_touching_loops;
     }
 
     //determinants get request
     @GetMapping("/solve/paths-determinants")
     public String get_paths_determinants(){
-        try{
-            return this.SFG.calculatePathFactors();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return this.paths_determinants;
     }
 
     //determinant get request
     @GetMapping("/solve/determinant")
     public String get_determinant(){
-        try{
-            return this.SFG.calculateDeterminant();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return this.determinant;
     }
 
     //Overall gain (the result) get request
     @GetMapping("/solve/overall-gain")
     public String get_overall_gain(){
-        try{
-            return this.SFG.getOverallGain();
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return this.overall_gain;
     }
 }
