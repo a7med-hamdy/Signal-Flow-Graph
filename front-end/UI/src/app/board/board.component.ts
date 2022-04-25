@@ -72,7 +72,7 @@ export class BoardComponent implements OnInit {
    */
   startSolving(){
     this.hideResults = false;
-    //this.updateGains();
+    this.updateGains();
     this.req.solve().subscribe(data =>{
       this.req.get_forward_paths().subscribe(data =>{
         this.paths = data;
