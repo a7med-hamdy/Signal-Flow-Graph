@@ -10,7 +10,7 @@ import { shapeFactory } from './shapeFactory';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  TableHeaders:any = ["Paths", "Loops", "none touching Loops", "Answer"];
+  TableHeaders:any = ["Paths", "Loops", "none touching Loops", "Paths determinants","Deterimnant","Answer"];
   hideResults = true; Choosing = false; hasSource = false;  hasSink = false;
   sourceNode!:any;  sinkNode!:any;
   pointers:any[] = [];
@@ -18,11 +18,12 @@ export class BoardComponent implements OnInit {
   paths:any[] = [];
   loops:any[] = [];
   noneTouchingLoops:any[] = [];
-  answer:any[] = [];
+  pathsDeterminants:any[] = [];
+  determinant:any;
+  answer:any;
   stage!:Konva.Stage;
   layer!:Konva.Layer;
   numOfMs = 0;
-  results:any[] = [];
   message: any;
   name: string = '';
   constructor(private req:RequestsService) { }
@@ -74,20 +75,29 @@ export class BoardComponent implements OnInit {
     this.updateGains();
     this.req.validate().subscribe(data =>{    });
     this.req.get_forward_paths().subscribe(data =>{
-      this.paths.push(data);
-      this.results.push(this.paths);
+      this.paths = data;
+      console.log(data);
     })
     this.req.get_loops().subscribe(data =>{
-      this.loops.push(data);
-      this.results.push(this.loops);
+      this.loops = data;
+      console.log(data);
     });
     this.req.get_non_touching_loops().subscribe(data =>{
-      this.noneTouchingLoops.push(data);
-      this.results.push(this.noneTouchingLoops);
+      this.noneTouchingLoops = data;
+      console.log(data);
     });
     this.req.get_overall_gain().subscribe(data => {
-      this.answer.push(data);
-      this.results.push(this.answer);
+      this.answer = data;
+      console.log(data);
+    });
+    this.req.get_determinant().subscribe(data => {
+      this.determinant = data;
+      console.log(data);
+
+    });
+    this.req.get_paths_determinants().subscribe(data => {
+      this.pathsDeterminants = data;
+      console.log(data);
     });
   }
   updateGains(){
@@ -101,8 +111,8 @@ export class BoardComponent implements OnInit {
    */
   clearAll(){
     this.req.clear();
-    this.shapes = []; this.pointers = []; this.results = [];  this.paths = [];
-    this.loops = [];  this.noneTouchingLoops = [];  this.answer = [];
+    this.shapes = []; this.pointers = [];  this.paths = [];   this.pathsDeterminants = [];
+    this.loops = [];  this.noneTouchingLoops = []; this.determinant = 0;  this.answer = 0;
     this.layer.destroyChildren();
     this.numOfMs = 0;
     this.Choosing = false;    this.hasSource = false;   this.hasSink = false;   this.hideResults = true;
@@ -121,10 +131,14 @@ export class BoardComponent implements OnInit {
       this.stage.off("mouseenter");
       this.stage.off("click");
       var sWithT:any = shapeFactory.buildNode(pos.x,pos.y,this.numOfMs,color);
-      if(name == "source")
+      if(name == "source"){
         this.sourceNode = sWithT;
-      if(name == "sink")
+        this.hasSource = true;
+      }
+      if(name == "sink"){
         this.sinkNode = sWithT;
+        this.hasSink = true;
+      }
       this.shapes.push(sWithT);
       this.layer.add(sWithT.getShapeWithText());
       this.numOfMs++;
@@ -172,10 +186,11 @@ export class BoardComponent implements OnInit {
           var x = component.getShapeWithTextFromArray(source);
           var y = component.getShapeWithTextFromArray(destination);
           var curveoffset = Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
+
           var curveHorizontal = 1;
           if(x.IsPointingIn(y.getShapeWithText())){
             curveHorizontal = -1;
-            curveoffset = Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
+            curveoffset = Math.max(y.getFollowersOut().length, x.getFollowersIn().length);
           }
           var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //create new arrow component
           //create new arrow component

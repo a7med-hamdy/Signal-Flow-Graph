@@ -166,6 +166,7 @@ table tr{
   background-color:silver;
   padding: 8px 8px 8px 8px;
   text-align: left;
+  border-bottom: solid black;
   transition-duration: 0.4s;
 }
 table td:hover {

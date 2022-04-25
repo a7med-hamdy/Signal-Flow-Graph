@@ -1,5 +1,5 @@
 <header>
-  <div id = "title"><b>SignalFlowGraph</b></div>
+  <div id = "title"><b>Signal Flow Graph</b></div>
   <div class="shapes">
     <button [disabled]="Choosing" title="Add Node" (click)="add('node','white')">
       <div class = "button-text">X+</div>
@@ -17,7 +17,7 @@
       <div title="Connect with Arrows"class = "button-text">↗</div>
     </button>
 
-    <button [disabled]="Choosing" (click)="startSolving()">
+    <button [disabled]="Choosing || !(hasSink || hasSource)" (click)="startSolving()">
       <div title="Solve" class = "button-text">=</div>
     </button>
 
@@ -42,22 +42,47 @@
       <thead>
         <tr>
           <th>Information</th>
-          <th *ngFor="let row of this.results; index as i ">{{i+1}}</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let header of this.TableHeaders">
-          <th scope="row">{{header}}</th>
-          <td *ngFor=" let row of this.results; index as i ">{{row}}</td>
+        <tr>
+          <th scope="row">{{TableHeaders[0]}}</th>
+          <div *ngFor="let row of this.paths; index as i"><td *ngFor=" let col of row.path; index as j ">{{col}}</td><td>gain = {{row.gain}}</td></div>
+        </tr>
+
+        <tr>
+          <th scope="row">{{TableHeaders[1]}}</th>
+          <div *ngFor="let row of this.loops; index as i"><td *ngFor=" let col of row.loop; index as j ">{{col}}</td><td>gain = {{row.gain}}</td></div>
+        </tr>
+
+        <tr>
+          <th scope="row">{{TableHeaders[2]}}</th>
+          <div *ngFor="let row of this.noneTouchingLoops index as i" style="border: solid black;">
+            <div *ngFor=" let col of row[(i+1).toString()] index as j" >
+              <td *ngFor="let cell of col.loop index as k">
+                {{cell}}
+              </td>
+              <td>gain = {{col.gain}}</td>
+            </div>
+          </div>
+        </tr>
+
+        <tr>
+          <th scope="row">{{TableHeaders[3]}}</th>
+          <div *ngFor="let row of this.pathsDeterminants; index as i"><td *ngFor=" let col of row.path; index as j ">{{col}}</td><td>gain = {{row.factor}}</td></div>
+        </tr>
+
+        <tr>
+          <th scope="row">{{TableHeaders[4]}}</th>
+          <td>{{this.determinant}}</td>
+        </tr>
+
+        <tr>
+          <th scope="row">{{TableHeaders[5]}}</th>
+          <td>{{this.answer}}</td>
         </tr>
       </tbody>
       <tfoot>
-        <tr>
-          <th scope="col" style = "text-align: center;" colspan="2">Matrix</th>
-        </tr>
-        <tr>
-          <td colspan="2" style = "text-align: center;">77</td>
-        </tr>
       </tfoot>
     </table>
   </div>
