@@ -9,21 +9,6 @@ import org.springframework.web.bind.annotation.*;
 public class RequestsController {
     Graph SFG = new Graph();
 
-    //using Regex to check if the weights of the edges are numbers or not
-    /*the numbers grammar "-?\\d+(\\.\\d+)?":
-        "-?"         -> negative sign is optional
-        "\\d+"       -> one or more digits
-        "(\\.\\d+)?" -> fraction part is optional
-    */
-    private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-    //checks if the given string is a number or not
-    public boolean isNumeric(String strNum) {
-        if (strNum == null) {
-            return false; 
-        }
-        return pattern.matcher(strNum).matches();
-    }
-
 
     /****************************************************************
      * Craeation Graph requests                                     *
@@ -89,16 +74,11 @@ public class RequestsController {
     public boolean add_edge_and_weight(
         @PathVariable("from") String from,
         @PathVariable("to") String to,
-        @PathVariable("weight") String weight)
+        @PathVariable("weight") Double weight)
 
     {
         try{
-            if(isNumeric(weight)){ //Numeric weights
-                this.SFG.addEdge(from, to, Double.valueOf(weight));
-            }
-            else{ //variable weights
-                // this.SFG.addEdge(from, to, weight);
-            }
+            this.SFG.addEdge(from, to, weight);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -112,16 +92,11 @@ public class RequestsController {
     public boolean set_edge_weight(
         @PathVariable("from") String from,
         @PathVariable("to") String to,
-        @PathVariable("new_weight") String new_weight)
+        @PathVariable("new_weight") Double new_weight)
 
     {
         try{
-            if(isNumeric(new_weight)){ //Numeric weights
-                this.SFG.setEdgeWeight(from, to, Double.valueOf(new_weight));
-            }
-            else{ //variable weights
-                // this.SFG.setEdgeWeight(from, to, new_weight);
-            }
+            this.SFG.setEdgeWeight(from, to, new_weight);
         }
         catch(Exception e){
             e.printStackTrace();
