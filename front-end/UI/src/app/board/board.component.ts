@@ -72,7 +72,7 @@ export class BoardComponent implements OnInit {
    */
   startSolving(){
     this.hideResults = false;
-    this.updateGains();
+    //this.updateGains();
     this.req.validate().subscribe(data =>{    });
     this.req.get_forward_paths().subscribe(data =>{
       this.paths = data;
@@ -134,15 +134,19 @@ export class BoardComponent implements OnInit {
       if(name == "source"){
         this.sourceNode = sWithT;
         this.hasSource = true;
+        this.req.setInputNode(sWithT.getShapeWithText().name());
       }
       if(name == "sink"){
         this.sinkNode = sWithT;
         this.hasSink = true;
+        this.req.setOutputNode(sWithT.getShapeWithText().name());
+      }
+      else{
+        this.req.addNode(sWithT.getShapeWithText().name());
       }
       this.shapes.push(sWithT);
       this.layer.add(sWithT.getShapeWithText());
       this.numOfMs++;
-      this.req.addNode(sWithT.getShapeWithText().name());
     });
 
   }
