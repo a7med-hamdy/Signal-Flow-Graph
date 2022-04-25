@@ -73,32 +73,36 @@ export class BoardComponent implements OnInit {
   startSolving(){
     this.hideResults = false;
     //this.updateGains();
-    this.req.validate().subscribe(data =>{    });
-    this.req.get_forward_paths().subscribe(data =>{
-      this.paths = data;
-      console.log(data);
-    })
-    this.req.get_loops().subscribe(data =>{
-      this.loops = data;
-      console.log(data);
-    });
-    this.req.get_non_touching_loops().subscribe(data =>{
-      this.noneTouchingLoops = data;
-      console.log(data);
-    });
-    this.req.get_overall_gain().subscribe(data => {
-      this.answer = data;
-      console.log(data);
-    });
-    this.req.get_determinant().subscribe(data => {
-      this.determinant = data;
-      console.log(data);
+    this.req.solve().subscribe(data =>{
+      this.req.get_forward_paths().subscribe(data =>{
+        this.paths = data;
+        console.log(data);
+      })
+      this.req.get_loops().subscribe(data =>{
+        this.loops = data;
+        console.log(data);
+      });
+      this.req.get_non_touching_loops().subscribe(data =>{
+        this.noneTouchingLoops = data;
+        console.log(data);
+      });
+
+      this.req.get_paths_determinants().subscribe(data => {
+        this.pathsDeterminants = data;
+        console.log(data);
+      });
+      this.req.get_determinant().subscribe(data => {
+        this.determinant = data;
+        console.log(data);
+
+      });
+      this.req.get_overall_gain().subscribe(data => {
+        this.answer = data;
+        console.log(data);
+      });
 
     });
-    this.req.get_paths_determinants().subscribe(data => {
-      this.pathsDeterminants = data;
-      console.log(data);
-    });
+
   }
   updateGains(){
     for(var i = 0; i < this.pointers.length;i++){
@@ -141,12 +145,10 @@ export class BoardComponent implements OnInit {
         this.hasSink = true;
         this.req.setOutputNode(sWithT.getShapeWithText().name());
       }
-      else{
-        this.req.addNode(sWithT.getShapeWithText().name());
-      }
       this.shapes.push(sWithT);
       this.layer.add(sWithT.getShapeWithText());
       this.numOfMs++;
+      this.req.addNode(sWithT.getShapeWithText().name());
     });
 
   }
