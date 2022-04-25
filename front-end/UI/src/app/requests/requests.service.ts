@@ -24,6 +24,28 @@ export class RequestsService {
     });
   }
 
+  /**sets a node as the input node
+   * @param name the name of the input node
+   */
+  setInputNode(name: string){
+    return this.http.post<any>(`${this.url}/input-node/${name}`, {})
+    .subscribe(data =>{
+      console.log(`Node ${name} is the input`);
+      console.log(data);
+    });
+  }
+
+  /**sets a node as the output node
+   * @param name the name of the output node
+   */
+  setOutputNode(name: string){
+    return this.http.post<any>(`${this.url}/output-node/${name}`, {})
+    .subscribe(data =>{
+      console.log(`Node ${name} is the output`);
+      console.log(data);
+    });
+  }
+
   /**> Edge without weight < creation request
    * @param from the source node of the edge
    * @param to   the destination node of the edge
