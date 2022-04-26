@@ -3,14 +3,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.jgrapht.alg.cycle.HawickJamesSimpleCycles;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import com.google.common.collect.*;
 
 public class loopDetector {
-    private DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> graph;
+    private DirectedWeightedPseudograph<String, DefaultWeightedEdge> graph;
     HawickJamesSimpleCycles<String, DefaultWeightedEdge> detector;
-    public loopDetector(DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> graph)
+    public loopDetector(DirectedWeightedPseudograph<String, DefaultWeightedEdge> graph)
     {
         this.graph = graph;
         this.detector = new HawickJamesSimpleCycles<>(graph);

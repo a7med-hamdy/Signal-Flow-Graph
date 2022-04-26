@@ -4,13 +4,13 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import  org.jgrapht.alg.shortestpath.*;
 import java.util.ArrayList;
 
 public class Graph {
-    private DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+    private DirectedWeightedPseudograph<String, DefaultWeightedEdge> graph = new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
     private loopDetector detector = new loopDetector(this.graph);
     private AllDirectedPaths<String, DefaultWeightedEdge> paths = new AllDirectedPaths<>(this.graph);
     private List<GraphPath<String,DefaultWeightedEdge>> forwardPaths;
@@ -37,35 +37,25 @@ public class Graph {
     public void setStartVertex(String v){ this.startVertex = v; }
     public void setEndVertex(String v)  { this.endVertex = v;   }
 
-    public void addEdge(String source, String destination, double weight) throws Exception
+    public void addEdge(String source, String destination, double weight)
     {
         try{
-            DefaultWeightedEdge e = this.graph.addEdge(source, destination);
-            if(e == null)
-            {
-                throw new Exception();
-            }
+            this.graph.addEdge(source, destination);
             this.graph.setEdgeWeight(this.graph.getEdge(source, destination), weight);
         }
         catch(IllegalArgumentException e)
         {
             System.out.println("error adding edge");
-            throw new Exception();
         }
     }
-    public void addEdge(String source, String destination) throws Exception
+    public void addEdge(String source, String destination) 
     {
         try{
-            DefaultWeightedEdge e =  this.graph.addEdge(source, destination);
-            if(e == null)
-            {
-                throw new Exception();
-            }
+            this.graph.addEdge(source, destination);
         }
         catch(IllegalArgumentException e)
         {
             System.out.println("error adding edge");
-            throw new Exception();
         }
     }
 
