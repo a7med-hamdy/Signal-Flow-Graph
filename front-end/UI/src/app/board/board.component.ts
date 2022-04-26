@@ -11,21 +11,19 @@ import { shapeFactory } from './shapeFactory';
 })
 export class BoardComponent implements OnInit {
   TableHeaders:any = ["Paths", "Loops", "none touching Loops", "Paths determinants","Deterimnant","Answer"];
-  hideResults = true; Choosing = false; hasSource = false;  hasSink = false;
-  sourceNode!:any;  sinkNode!:any;
-  pointers:any[] = [];
-  shapes:any[] = [];
-  paths:any[] = [];
-  loops:any[] = [];
-  noneTouchingLoops:any[] = [];
-  pathsDeterminants:any[] = [];
-  determinant:any;
-  answer:any;
-  stage!:Konva.Stage;
-  layer!:Konva.Layer;
-  numOfMs = 0;
-  message: any;
-  name: string = '';
+  hideResults = true; Choosing = false; hasSource = false;  hasSink = false;// control booleans
+  sourceNode!:any;  sinkNode!:any;//source and sink nodes
+  pointers:any[] = [];//arrow array
+  shapes:any[] = [];//nodes array
+  paths:any[] = [];//resulting paths array
+  loops:any[] = [];//resulting loops array
+  noneTouchingLoops:any[] = [];//resulting none touching loops array
+  pathsDeterminants:any[] = [];//resulting path deterimnants
+  determinant:any;//resulting system determinant
+  answer:any;//resulting overall gain
+  stage!:Konva.Stage;//stage
+  layer!:Konva.Layer;//layer
+  numOfMs = 0;//number of nodes used for numbering them
   constructor(private req:RequestsService) { }
 
   ngOnInit() {
@@ -68,35 +66,35 @@ export class BoardComponent implements OnInit {
 
   /**********************************************BOARD FUNCTIONS************************************************** */
   /**
-   * starts the simulation
+   * starts the solving
    */
   startSolving(){
     this.hideResults = false;
-    this.updateGains();
-    this.req.solve().subscribe(data =>{
-      this.req.get_forward_paths().subscribe(data =>{
+    this.updateGains();//update the gains
+    this.req.solve().subscribe(data =>{//request to solve
+      this.req.get_forward_paths().subscribe(data =>{//request paths array
         this.paths = data;
         console.log(data);
       })
-      this.req.get_loops().subscribe(data =>{
+      this.req.get_loops().subscribe(data =>{//request loops array
         this.loops = data;
         console.log(data);
       });
-      this.req.get_non_touching_loops().subscribe(data =>{
+      this.req.get_non_touching_loops().subscribe(data =>{//request none touching loops array
         this.noneTouchingLoops = data;
         console.log(data);
       });
 
-      this.req.get_paths_determinants().subscribe(data => {
+      this.req.get_paths_determinants().subscribe(data => {//request paths determinants array
         this.pathsDeterminants = data;
         console.log(data);
       });
-      this.req.get_determinant().subscribe(data => {
+      this.req.get_determinant().subscribe(data => {//request overall determinante
         this.determinant = data;
         console.log(data);
 
       });
-      this.req.get_overall_gain().subscribe(data => {
+      this.req.get_overall_gain().subscribe(data => {//request oveerall gain
         this.answer = data;
         console.log(data);
       });
@@ -104,12 +102,16 @@ export class BoardComponent implements OnInit {
     });
 
   }
+
+  /**
+   * update the gains on the arrows after editing them
+   */
   updateGains(){
     for(var i = 0; i < this.pointers.length;i++){
         this.req.setEdgeWeight(this.pointers[i].getSource().name(), this.pointers[i].getDestination().name(), this.pointers[i].getText().text());
     }
-    //update your gains here using the array;
   }
+
   /**
    * clears all the board
    */
@@ -122,33 +124,35 @@ export class BoardComponent implements OnInit {
     this.Choosing = false;    this.hasSource = false;   this.hasSink = false;   this.hideResults = true;
     this.sourceNode = null;   this.sinkNode = null;
   }
-  /** Adds node to the board
+
+  /**
    *
-   *
+   * @param name source | sink | node
+   * @param color yellow | orange | white
    */
   add(name:string, color:string){
     var pos:any;
-    this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"})
-    this.stage.on("click", ()=>{
-      pos = this.stage.getPointerPosition();
-      this.stage.container().style.cursor = "default";
-      this.stage.off("mouseenter");
-      this.stage.off("click");
-      var sWithT:any = shapeFactory.buildNode(pos.x,pos.y,this.numOfMs,color);
+    this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"})//change cursor event
+    this.stage.on("click", ()=>{//on click event
+      pos = this.stage.getPointerPosition();//get cursor position on board
+      this.stage.container().style.cursor = "default";//return to default cursor
+      this.stage.off("mouseenter");//turn off events
+      this.stage.off("click");//turn off events
+      var sWithT:any = shapeFactory.buildNode(pos.x,pos.y,this.numOfMs,color);//build a shape and add it to the cursor position
 
-      this.shapes.push(sWithT);
-      this.layer.add(sWithT.getShapeWithText());
-      this.numOfMs++;
-      this.req.addNode(sWithT.getShapeWithText().name());
+      this.shapes.push(sWithT);//push in the shapes array
+      this.layer.add(sWithT.getShapeWithText());//add it in the layer
+      this.numOfMs++;//increment node count
+      this.req.addNode(sWithT.getShapeWithText().name());//request to add node
       if(name == "source"){
         this.sourceNode = sWithT;
         this.hasSource = true;
-        this.req.setInputNode(sWithT.getShapeWithText().name());
+        this.req.setInputNode(sWithT.getShapeWithText().name());//if source set it to be
       }
       if(name == "sink"){
         this.sinkNode = sWithT;
         this.hasSink = true;
-        this.req.setOutputNode(sWithT.getShapeWithText().name());
+        this.req.setOutputNode(sWithT.getShapeWithText().name());//if sink set it to be
       }
     });
 
@@ -160,19 +164,16 @@ export class BoardComponent implements OnInit {
    */
   addArrow(){
     console.log("add Arrows!");
-    var arrow;
-    var source:any;
-    var destination:any;
-    var clicks = 0;
+    var source:any;//source shape
+    var destination:any;//destination shape
+    var clicks = 0;//number of clicks
     this.Choosing = true
     var component = this;
-    this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"})
-    this.stage.on("click",function(e){
-      clicks++;
+    this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"});//change cursor event
+    this.stage.on("click",function(e){//click event
+      clicks++;//increment clicks counter
       console.log(e.target)
-      //if the clicked shape is a konva shape
-      if(e.target instanceof Konva.Shape){
-        console.log("Hi")
+      if(e.target instanceof Konva.Shape){ //if the clicked shape is a konva shape
         //gets its source group
         if (clicks == 1){
           console.log("1stClick")
@@ -184,7 +185,7 @@ export class BoardComponent implements OnInit {
           destination = e.target.getParent();
         }
       }
-      if(clicks >= 2){
+      if(clicks >= 2){//two clicks
         console.log("Two clicks")
         if(source != null && destination != null && source != destination){
           console.log("adding arrows!")
@@ -192,30 +193,31 @@ export class BoardComponent implements OnInit {
           //get the source and destination shapes
           var x = component.getShapeWithTextFromArray(source);
           var y = component.getShapeWithTextFromArray(destination);
+          //calculate curve offset
           var curveoffset = Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
-
+          //it curves upwards by default
           var curveHorizontal = 1;
-          if(x.IsPointingIn(y.getShapeWithText())){
-            curveHorizontal = -1;
+          if(x.IsPointingIn(y.getShapeWithText())){//if it is a feed back not 100% accurate
+            curveHorizontal = -1;//curve downward
             curveoffset = Math.max(y.getFollowersOut().length, x.getFollowersIn().length);
           }
-          var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //create new arrow component
-          //create new arrow component
+          var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //build new arrow component
           x.addFollowerOut(arrow);
           y.addFollowerIn(arrow);
 
           component.pointers.push(arrow);    //add the arrow to the shapes's arrays
           component.layer.add(arrow.getBranch());  //add arrow to the layer to display
-          component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), Number(arrow.getText().text()));
+          component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), Number(arrow.getText().text()));//request to add arrow
         }
-        catch{
-          component.Choosing=false
+        catch{//if any error occured abort
+          component.Choosing=false;
           component.stage.off('click');
           component.stage.off("mouseenter");
           component.stage.container().style.cursor = "default";
           return;
         }
         }
+        //turn off all listeners
         component.Choosing=false
         component.stage.off('click');
         component.stage.off("mouseenter");

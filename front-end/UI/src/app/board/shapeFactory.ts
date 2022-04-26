@@ -1,7 +1,9 @@
 import Konva from "konva";
 import { Arrow } from "./arrow";
 import { ShapeWithText } from "./shapeWithText";
-
+/**
+ * factory that creates shapes
+ */
 export class shapeFactory{
 
   constructor(){
