@@ -193,9 +193,6 @@ export class shapeFactory{
           if(!isNaN(textarea.value) && textarea.value != ""){
             textNode.text(textarea.value.trim().replaceAll(" ", ""));
           }
-          else{
-            textNode.text("1");
-          }
           removeTextarea();
         }
         // on esc do not set value back to node
@@ -216,9 +213,6 @@ export class shapeFactory{
         if (e.target !== textarea) {
           if(!isNaN(textarea.value) && textarea.value != "")
           textNode.text(textarea.value.trim().replaceAll(" ", ""));
-          else{
-            textNode.text("1");
-          }
           removeTextarea();
         }
       }
