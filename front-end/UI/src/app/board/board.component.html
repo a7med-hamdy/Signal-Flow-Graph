@@ -17,7 +17,7 @@
       <div title="Connect with Arrows"class = "button-text">↗</div>
     </button>
 
-    <button [disabled]="Choosing || !(hasSink || hasSource)" (click)="startSolving()">
+    <button [disabled]="Choosing || !!(hasSink || hasSource)" (click)="startSolving()">
       <div title="Solve" class = "button-text">=</div>
     </button>
 
@@ -58,11 +58,13 @@
         <tr>
           <th scope="row">{{TableHeaders[2]}}</th>
           <div *ngFor="let row of this.noneTouchingLoops index as i" style="border: solid black;">
+            <div *ngIf="i != 0">{{i+1}} Non Touching
             <div *ngFor=" let col of row[(i+1).toString()] index as j" >
               <td *ngFor="let cell of col.loop index as k">
                 {{cell}}
               </td>
               <td>gain = {{col.gain}}</td>
+            </div>
             </div>
           </div>
         </tr>
