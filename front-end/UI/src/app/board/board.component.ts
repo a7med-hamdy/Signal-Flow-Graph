@@ -211,13 +211,17 @@ export class BoardComponent implements OnInit {
             curveHorizontal = -1;//curve downward
             curveoffset = Math.max(y.getFollowersOut().length, x.getFollowersIn().length)+1;
           }
-          var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //build new arrow component
-          x.addFollowerOut(arrow);
-          y.addFollowerIn(arrow);
 
-          component.pointers.push(arrow);    //add the arrow to the shapes's arrays
-          component.layer.add(arrow.getBranch());  //add arrow to the layer to display
-          component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), Number(arrow.getText().text()));//request to add arrow
+          component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), 1).subscribe(data =>{
+            console.log(data);
+            if(data){
+              var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //build new arrow component
+              x.addFollowerOut(arrow);
+              y.addFollowerIn(arrow);
+              component.pointers.push(arrow);    //add the arrow to the shapes's arrays
+              component.layer.add(arrow.getBranch());  //add arrow to the layer to display
+            }
+          });;//request to add arrow
         }
         catch{//if any error occured abort
           component.Choosing=false;

@@ -57,7 +57,7 @@ export class RequestsService {
       console.log(`Edge ${from}-${to} added`);
       console.log(data);
     });
-  }  
+  }
 
   /**> Edge with weight < creation request
    * @param from   the source node of the edge
@@ -67,10 +67,7 @@ export class RequestsService {
   addEdgeWithWeight(from: string, to: string, weight: number){
     let info = `/${from}/${to}/${weight}`
     return this.http.post<any>(`${this.url}/+edge+weight${info}`, {})
-    .subscribe(data =>{
-      console.log(`Edge ${from}-${to} added\nwith weight ${weight}`);
-      console.log(data);
-    });
+
   }
 
   /**Edge weight setting/updating request
@@ -99,7 +96,7 @@ export class RequestsService {
   /******************************************************************
    * Solution requests                                              *
    ******************************************************************/
-  //checks if it's a valid Signal-Flow-Graph or not 
+  //checks if it's a valid Signal-Flow-Graph or not
   validate(){
     return this.http.post<any>(`${this.url}/validate`, {})
     /* .subscribe(valid =>{
@@ -113,16 +110,16 @@ export class RequestsService {
     }); */
   }
 
-  
+
   //solves & stores the solution in backend
   solve(){
     return this.http.post<any>(`${this.url}/solve`, {})
-    /* .subscribe(done => { 
-          if(done) 
+    /* .subscribe(done => {
+          if(done)
             console.log("Solved successfully.")
           else
             console.log("ERROR: not solved!!")
-          
+
     }); */
   }
 
@@ -130,54 +127,54 @@ export class RequestsService {
   //gets the list of all forward paths
   get_forward_paths(){
     return this.http.get<any>(`${this.url}/solve/forward-paths`)
-    /* .subscribe(response => { 
+    /* .subscribe(response => {
       //store & diplay the forward paths
-      console.log(response); 
+      console.log(response);
     }); */
   }
 
   //gets the list of all loops detected in the graph
   get_loops(){
     return this.http.get<any>(`${this.url}/solve/loops`)
-    /* .subscribe(response => { 
+    /* .subscribe(response => {
       //store & diplay the loops
-      console.log(response); 
+      console.log(response);
     }); */
   }
 
   //gets the lists of different combinations of all non-touching loops
   get_non_touching_loops(){
     return this.http.get<any>(`${this.url}/solve/non-touching-loops`)
-    /* .subscribe(response => { 
+    /* .subscribe(response => {
       //store & diplay the non-touching-loops
-      console.log(response); 
+      console.log(response);
     }); */
   }
 
   //gets the list of the determinants of each forward path
   get_paths_determinants(){
     return this.http.get<any>(`${this.url}/solve/paths-determinants`)
-    /* .subscribe(response => { 
+    /* .subscribe(response => {
       //store & diplay the determinants
-      console.log(response); 
+      console.log(response);
     }); */
   }
 
   //gets the determinant of the system
   get_determinant(){
     return this.http.get<any>(`${this.url}/solve/determinant`)
-    /* .subscribe(response => { 
+    /* .subscribe(response => {
       //store & diplay the determinant
-      console.log(response); 
+      console.log(response);
     }); */
   }
 
   //gets the overall gain of the system (the result)
   get_overall_gain(){
     return this.http.get<any>(`${this.url}/solve/overall-gain`)
-    /* .subscribe(response => { 
+    /* .subscribe(response => {
       //store & diplay the overall gain
-      console.log(response); 
+      console.log(response);
     }); */
   }
 }
