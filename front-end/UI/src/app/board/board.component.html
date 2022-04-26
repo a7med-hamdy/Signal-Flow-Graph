@@ -17,7 +17,7 @@
       <div title="Connect with Arrows"class = "button-text">↗</div>
     </button>
 
-    <button [disabled]="Choosing || !(hasSink || hasSource)" (click)="startSolving()">
+    <button [disabled]="Choosing || !(hasSink && hasSource)" (click)="startSolving()">
       <div title="Solve" class = "button-text">=</div>
     </button>
 
@@ -38,6 +38,7 @@
 <section>
   <div id="textBox">
     <table [hidden]="hideResults">
+      <caption [hidden] style="color:red;">Graph Not valid</caption>
       <caption>Results</caption>
       <thead>
         <tr>

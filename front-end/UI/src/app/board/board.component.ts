@@ -24,6 +24,7 @@ export class BoardComponent implements OnInit {
   stage!:Konva.Stage;//stage
   layer!:Konva.Layer;//layer
   numOfMs = 0;//number of nodes used for numbering them
+  displayError: boolean = false;
   constructor(private req:RequestsService) { }
 
   ngOnInit() {
@@ -102,6 +103,9 @@ export class BoardComponent implements OnInit {
           });
 
         });
+      }
+      else{
+        this.displayError = true;
       }
     })
 
