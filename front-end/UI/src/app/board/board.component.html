@@ -17,7 +17,7 @@
       <div title="Connect with Arrows"class = "button-text">↗</div>
     </button>
 
-    <button [disabled]="Choosing || !(hasSink && hasSource)" (click)="startSolving()">
+    <button [disabled]="Choosing || !!(hasSink && hasSource)" (click)="startSolving()">
       <div title="Solve" class = "button-text">=</div>
     </button>
 
@@ -57,24 +57,28 @@
           <th scope="row">{{TableHeaders[2]}}</th>
           <div *ngFor="let row of this.noneTouchingLoops index as i" style="border: solid black;">
             <div *ngIf="i != 0">{{i+1}} Non Touching
-            <div *ngFor=" let col of row[(i+1).toString()] index as j" >
-              <td *ngFor="let cell of col.loop index as k">
-                {{cell}}
-              </td>
-              <td>gain = {{col.gain}}</td>
+              <div *ngFor=" let col of row[(i+1).toString()] index as j" [ngStyle]="{'border-bottom':((j+1)%(i+1) == 0) ? 'solid grey' : 'none'}">
+                      <td *ngFor="let cell of col.loop index as k" >
+                        {{cell}}
+                      </td>
+                      <td>gain = {{col.gain}}</td>
+                </div>
+              </div>
             </div>
-            </div>
-          </div>
         </tr>
 
         <tr>
           <th scope="row">{{TableHeaders[3]}}</th>
-          <div *ngFor="let row of this.pathsDeterminants; index as i"><td *ngFor=" let col of row.path; index as j ">{{col}}</td><td>gain = {{row.factor}}</td></div>
+          <div *ngFor="let row of this.pathsDeterminants; index as i">
+            <td *ngFor=" let col of row.path; index as j ">
+            {{col}}
+          </td>
+          <td>Δ<sub>{{i+1}}</sub> = {{row.factor}}</td></div>
         </tr>
 
         <tr>
           <th scope="row">{{TableHeaders[4]}}</th>
-          <td>{{this.determinant}}</td>
+          <td>Δ = {{this.determinant}}</td>
         </tr>
 
         <tr>
