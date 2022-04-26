@@ -24,7 +24,7 @@ export class BoardComponent implements OnInit {
   stage!:Konva.Stage;//stage
   layer!:Konva.Layer;//layer
   numOfMs = 0;//number of nodes used for numbering them
-  displayError: boolean = false;
+  displayError: boolean = true;
   constructor(private req:RequestsService) { }
 
   ngOnInit() {
@@ -73,8 +73,9 @@ export class BoardComponent implements OnInit {
     this.hideResults = false;
     this.updateGains();//update the gains
     this.req.validate().subscribe(data=>{
+      console.log(data);
       if(data == true){
-        this.displayError = false;
+        this.displayError = true;
         this.req.solve().subscribe(data =>{//request to solve
           this.req.get_forward_paths().subscribe(data =>{//request paths array
             this.paths = data;
@@ -106,7 +107,7 @@ export class BoardComponent implements OnInit {
         });
       }
       else{
-        this.displayError = true;
+        this.displayError = false;
       }
     })
 
@@ -131,7 +132,7 @@ export class BoardComponent implements OnInit {
     this.layer.destroyChildren();
     this.numOfMs = 0;
     this.Choosing = false;    this.hasSource = false;   this.hasSink = false;   this.hideResults = true;
-    this.displayError = false;  this.sourceNode = null;   this.sinkNode = null;
+    this.displayError = true;  this.sourceNode = null;   this.sinkNode = null;
   }
 
   /**
