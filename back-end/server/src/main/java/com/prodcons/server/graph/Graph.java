@@ -208,6 +208,10 @@ public class Graph {
             sum += gain*this.pathFactor.get(i);
             i++;
         }
+        if(determinant == 0)
+        {
+            return "infinity";
+        }
         double answer = sum / determinant;
         return Double.toString(answer);
     }
