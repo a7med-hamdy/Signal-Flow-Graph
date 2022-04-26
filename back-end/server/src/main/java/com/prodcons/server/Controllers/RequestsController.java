@@ -129,7 +129,7 @@ public class RequestsController {
     //checks if it's a valid Signal-Flow-Graph or not 
     @PostMapping("/validate")
     public boolean validate(){
-        return /* this.SFG.valdiateGraph() */ true;
+        return this.SFG.isValid();
     }
     
     
