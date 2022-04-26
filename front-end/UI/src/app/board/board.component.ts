@@ -74,6 +74,7 @@ export class BoardComponent implements OnInit {
     this.updateGains();//update the gains
     this.req.validate().subscribe(data=>{
       if(data == true){
+        this.displayError = false;
         this.req.solve().subscribe(data =>{//request to solve
           this.req.get_forward_paths().subscribe(data =>{//request paths array
             this.paths = data;
@@ -130,7 +131,7 @@ export class BoardComponent implements OnInit {
     this.layer.destroyChildren();
     this.numOfMs = 0;
     this.Choosing = false;    this.hasSource = false;   this.hasSink = false;   this.hideResults = true;
-    this.sourceNode = null;   this.sinkNode = null;
+    this.displayError = false;  this.sourceNode = null;   this.sinkNode = null;
   }
 
   /**
