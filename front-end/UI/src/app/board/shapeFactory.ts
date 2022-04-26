@@ -190,8 +190,9 @@ export class shapeFactory{
         // but don't hide on shift + enter
         if (e.keyCode === 13 && !e.shiftKey) {
 
-          if(!isNaN(textarea.value))
-            textNode.text(textarea.value);
+          if(!isNaN(textarea.value) && textarea.value != ""){
+            textNode.text(textarea.value.trim().replaceAll(" ", ""));
+          }
           else{
             textNode.text("1");
           }
@@ -213,8 +214,8 @@ export class shapeFactory{
 
       function handleOutsideClick(e:any) {
         if (e.target !== textarea) {
-          if(!isNaN(textarea.value))
-            textNode.text(textarea.value);
+          if(!isNaN(textarea.value) && textarea.value != "")
+          textNode.text(textarea.value.trim().replaceAll(" ", ""));
           else{
             textNode.text("1");
           }
