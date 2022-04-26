@@ -5,10 +5,12 @@ import java.util.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import  org.jgrapht.alg.shortestpath.*;
 import java.util.ArrayList;
 
 public class Graph {
+    private ConnectivityInspector<String, DefaultWeightedEdge>inspector;
     private DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private loopDetector detector = new loopDetector(this.graph);
     private AllDirectedPaths<String, DefaultWeightedEdge> paths = new AllDirectedPaths<>(this.graph);
@@ -20,38 +22,17 @@ public class Graph {
     private String endVertex = null;
     private double determinant = 1;
     public Graph (){
-        // this.graph.addVertex("v1");
-        // this.graph.addVertex("v2");
-        // this.graph.addVertex("v3");
-        // this.graph.addVertex("v4");
-        // this.graph.addVertex("v5");
-        // this.graph.addVertex("v6");
-        // this.graph.addVertex("v7");
-        // this.graph.addVertex("v8");
-        // this.graph.addEdge("v1", "v2");
-        // this.graph.addEdge("v2", "v3");
-        // this.graph.addEdge("v3", "v4");
-        // this.graph.addEdge("v4", "v1");
-        // this.graph.addEdge("v4", "v5");
-        // this.graph.addEdge("v5", "v6");
-        // this.graph.addEdge("v6", "v5");
-        // this.graph.addEdge("v3", "v1");
-        // this.graph.addEdge("v6", "v7");
-        // this.graph.addEdge("v7", "v8");
-        // this.graph.addEdge("v8", "v7");
-        // this.graph.setEdgeWeight(this.graph.getEdge("v7", "v8"), 5);
-        // this.graph.setEdgeWeight(this.graph.getEdge("v1", "v2"), 2);
-        // this.graph.setEdgeWeight(this.graph.getEdge("v4", "v1"), 3);
-        // getPaths();
-        // loops = this.detector.getNonTouchingLoops();
-        // this.getAllLoops();
-        // calculatePathFactors();
-        // calculateDeterminant();
+        inspector  = new ConnectivityInspector<>(this.graph);
     }
 
     public void addVertex(String v)
     {
         this.graph.addVertex(v);
+    }
+    public boolean isValid()
+    {
+        System.out.println(this.inspector.isConnected());
+        return this.inspector.isConnected();
     }
 
     public void setStartVertex(String v){ this.startVertex = v; }
