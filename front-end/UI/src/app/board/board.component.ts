@@ -142,6 +142,7 @@ export class BoardComponent implements OnInit {
    */
   add(name:string, color:string){
     var pos:any;
+    this.Choosing = true;
     this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"})//change cursor event
     this.stage.on("click", ()=>{//on click event
       pos = this.stage.getPointerPosition();//get cursor position on board
@@ -164,6 +165,7 @@ export class BoardComponent implements OnInit {
         this.hasSink = true;
         this.req.setOutputNode(sWithT.getShapeWithText().name());//if sink set it to be
       }
+      this.Choosing = false;
     });
 
   }
@@ -177,7 +179,7 @@ export class BoardComponent implements OnInit {
     var source:any;//source shape
     var destination:any;//destination shape
     var clicks = 0;//number of clicks
-    this.Choosing = true
+    this.Choosing = true;
     var component = this;
     this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"});//change cursor event
     this.stage.on("click",function(e){//click event
