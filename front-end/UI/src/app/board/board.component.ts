@@ -71,35 +71,39 @@ export class BoardComponent implements OnInit {
   startSolving(){
     this.hideResults = false;
     this.updateGains();//update the gains
-    this.req.solve().subscribe(data =>{//request to solve
-      this.req.get_forward_paths().subscribe(data =>{//request paths array
-        this.paths = data;
-        console.log(data);
-      })
-      this.req.get_loops().subscribe(data =>{//request loops array
-        this.loops = data;
-        console.log(data);
-      });
-      this.req.get_non_touching_loops().subscribe(data =>{//request none touching loops array
-        this.noneTouchingLoops = data;
-        console.log(data);
-      });
+    this.req.validate().subscribe(data=>{
+      if(data == true){
+        this.req.solve().subscribe(data =>{//request to solve
+          this.req.get_forward_paths().subscribe(data =>{//request paths array
+            this.paths = data;
+            console.log(data);
+          })
+          this.req.get_loops().subscribe(data =>{//request loops array
+            this.loops = data;
+            console.log(data);
+          });
+          this.req.get_non_touching_loops().subscribe(data =>{//request none touching loops array
+            this.noneTouchingLoops = data;
+            console.log(data);
+          });
 
-      this.req.get_paths_determinants().subscribe(data => {//request paths determinants array
-        this.pathsDeterminants = data;
-        console.log(data);
-      });
-      this.req.get_determinant().subscribe(data => {//request overall determinante
-        this.determinant = data;
-        console.log(data);
+          this.req.get_paths_determinants().subscribe(data => {//request paths determinants array
+            this.pathsDeterminants = data;
+            console.log(data);
+          });
+          this.req.get_determinant().subscribe(data => {//request overall determinante
+            this.determinant = data;
+            console.log(data);
 
-      });
-      this.req.get_overall_gain().subscribe(data => {//request oveerall gain
-        this.answer = data;
-        console.log(data);
-      });
+          });
+          this.req.get_overall_gain().subscribe(data => {//request oveerall gain
+            this.answer = data;
+            console.log(data);
+          });
 
-    });
+        });
+      }
+    })
 
   }
 
