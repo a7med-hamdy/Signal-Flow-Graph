@@ -10,7 +10,6 @@ import  org.jgrapht.alg.shortestpath.*;
 import java.util.ArrayList;
 
 public class Graph {
-    private ConnectivityInspector<String, DefaultWeightedEdge>inspector;
     private DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> graph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
     private loopDetector detector = new loopDetector(this.graph);
     private AllDirectedPaths<String, DefaultWeightedEdge> paths = new AllDirectedPaths<>(this.graph);
@@ -18,12 +17,11 @@ public class Graph {
     private List<Double> pathsGain = new ArrayList<>();
     private List<Double> pathFactor = new ArrayList<>();
     private List<List<List<String>>> loops;
-    private String startVertex = null;
-    private String endVertex = null;
+    private String startVertex = "";
+    private String endVertex = "";
     private double determinant = 1;
-    public Graph (){
-        inspector  = new ConnectivityInspector<>(this.graph);
-    }
+    public Graph (){}
+
 
     public void addVertex(String v)
     {
@@ -31,33 +29,53 @@ public class Graph {
     }
     public boolean isValid()
     {
-        System.out.println(this.inspector.isConnected());
-        return this.inspector.isConnected();
+        ConnectivityInspector<String, DefaultWeightedEdge>inspector = new ConnectivityInspector<>(this.graph);
+        System.out.println(inspector.isConnected());
+        return inspector.isConnected();
     }
 
     public void setStartVertex(String v){ this.startVertex = v; }
     public void setEndVertex(String v)  { this.endVertex = v;   }
 
-    public void addEdge(String source, String destination, double weight)
+    public void addEdge(String source, String destination, double weight) throws Exception
     {
         try{
-            this.graph.addEdge(source, destination);
+            DefaultWeightedEdge e = this.graph.addEdge(source, destination);
+            if(e == null)
+            {
+                throw new Exception();
+            }
             this.graph.setEdgeWeight(this.graph.getEdge(source, destination), weight);
         }
         catch(IllegalArgumentException e)
         {
             System.out.println("error adding edge");
+            throw new Exception();
         }
     }
-    public void addEdge(String source, String destination)
+    public void addEdge(String source, String destination) throws Exception
     {
         try{
-            this.graph.addEdge(source, destination);
+            DefaultWeightedEdge e =  this.graph.addEdge(source, destination);
+            if(e == null)
+            {
+                throw new Exception();
+            }
         }
         catch(IllegalArgumentException e)
         {
             System.out.println("error adding edge");
+            throw new Exception();
         }
+    }
+
+    public void resetGraphCalculations()
+    {
+        this.paths = new AllDirectedPaths<>(this.graph);
+        this.detector = new loopDetector(this.graph);
+        this.pathFactor = new ArrayList<>();
+        this.pathsGain = new ArrayList<>();
+        this.determinant = 1;
     }
 
     public void setEdgeWeight(String source, String destination, double weight)
@@ -66,6 +84,7 @@ public class Graph {
     }
 
     public String getPaths(){
+        System.out.println("called");
         JSONArray arr = new JSONArray();
         this.forwardPaths= this.paths.getAllPaths(this.startVertex, this.endVertex, true, null);
         for(int i = 0; i < this.forwardPaths.size(); i++){

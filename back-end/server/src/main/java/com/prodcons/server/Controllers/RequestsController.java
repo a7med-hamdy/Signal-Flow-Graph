@@ -66,7 +66,7 @@ public class RequestsController {
             this.SFG.addEdge(from, to);
         }
         catch(Exception e){
-            e.printStackTrace();
+            System.out.println("error adding edge");
             return false;
         }
         return true;
@@ -84,7 +84,7 @@ public class RequestsController {
             this.SFG.addEdge(from, to, weight);
         }
         catch(Exception e){
-            e.printStackTrace();
+            System.out.println("error adding edge");
             return false;
         }
         return true;
@@ -138,6 +138,7 @@ public class RequestsController {
     public boolean solve(){
         //solving the signal flow graph
         try{
+            this.SFG.resetGraphCalculations();
             this.forward_paths      = this.SFG.getPaths();
             this.loops              = this.SFG.getAllLoops();
             this.non_touching_loops = this.SFG.getLoopsClassified();
