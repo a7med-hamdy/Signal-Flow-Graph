@@ -102,6 +102,15 @@ export class RequestsService {
   //checks if it's a valid Signal-Flow-Graph or not 
   validate(){
     return this.http.post<any>(`${this.url}/validate`, {})
+    /* .subscribe(valid =>{
+      if(valid){
+        //solve the SFG
+        console.log("Graph is valid.");
+      }
+      else{
+        console.log("Error! graph is invalid.");
+      }
+    }); */
   }
 
   
