@@ -71,7 +71,6 @@ export class BoardComponent implements OnInit {
    */
   startSolving(){
     this.hideResults = false;
-    this.updateGains();//update the gains
     this.req.validate().subscribe(data=>{
       console.log(data);
       if(data == true){
