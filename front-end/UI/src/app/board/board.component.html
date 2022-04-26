@@ -17,7 +17,7 @@
       <div title="Connect with Arrows"class = "button-text">↗</div>
     </button>
 
-    <button [disabled]="Choosing || !!(hasSink || hasSource)" (click)="startSolving()">
+    <button [disabled]="Choosing || !(hasSink || hasSource)" (click)="startSolving()">
       <div title="Solve" class = "button-text">=</div>
     </button>
 
