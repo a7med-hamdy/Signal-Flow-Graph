@@ -10,7 +10,7 @@ import { shapeFactory } from './shapeFactory';
   styleUrls: ['./board.component.css']
 })
 export class BoardComponent implements OnInit {
-  TableHeaders:any = ["Paths", "Loops", "none touching Loops", "Paths determinants","Deterimnant","Answer"];
+  TableHeaders:any = ["Paths", "Loops", "none touching Loops", "Paths determinants","Deterimnant","Overall Gain"];
   hideResults = true; Choosing = false; hasSource = false;  hasSink = false;// control booleans
   sourceNode!:any;  sinkNode!:any;//source and sink nodes
   pointers:any[] = [];//arrow array

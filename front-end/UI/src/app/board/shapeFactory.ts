@@ -61,7 +61,7 @@ export class shapeFactory{
    */
   public static buildEditableText(){
     var textNode:any = new Konva.Text({
-      text:'0',
+      text:'1',
       fill:'white',
       fontFamily:'Consolas',
       fontSize:20,
@@ -114,11 +114,11 @@ export class shapeFactory{
       textarea.style.position = 'absolute';
       textarea.style.top = areaPosition.y + 'px';
       textarea.style.left = areaPosition.x + 'px';
-      textarea.style.width = textNode.width() - textNode.padding() * 2 + 'px';
+      textarea.style.width = textNode.width() *2+ 'px';
       textarea.style.height =
         textNode.height() - textNode.padding() * 2 + 5 + 'px';
       textarea.style.fontSize = textNode.fontSize() + 'px';
-      textarea.style.border = 'none';
+      textarea.style.border = 'solid white';
       textarea.style.padding = '0px';
       textarea.style.margin = '0px';
       textarea.style.overflow = 'hidden';
@@ -189,7 +189,12 @@ export class shapeFactory{
         // hide on enter
         // but don't hide on shift + enter
         if (e.keyCode === 13 && !e.shiftKey) {
-          textNode.text(textarea.value);
+
+          if(!isNaN(textarea.value))
+            textNode.text(textarea.value);
+          else{
+            textNode.text("1");
+          }
           removeTextarea();
         }
         // on esc do not set value back to node
@@ -200,7 +205,7 @@ export class shapeFactory{
 
       textarea.addEventListener('keydown', function () {
         var scale = textNode.getAbsoluteScale().x;
-        setTextareaWidth(textNode.width() * scale);
+        setTextareaWidth(textNode.width() * scale *5);
         textarea.style.height = 'auto';
         textarea.style.height =
           textarea.scrollHeight + textNode.fontSize() + 'px';
@@ -208,7 +213,11 @@ export class shapeFactory{
 
       function handleOutsideClick(e:any) {
         if (e.target !== textarea) {
-          textNode.text(textarea.value);
+          if(!isNaN(textarea.value))
+            textNode.text(textarea.value);
+          else{
+            textNode.text("1");
+          }
           removeTextarea();
         }
       }
