@@ -197,9 +197,9 @@ export class BoardComponent implements OnInit {
           var curveoffset = Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
           //it curves upwards by default
           var curveHorizontal = 1;
-          if(x.IsPointingIn(y.getShapeWithText())){//if it is a feed back not 100% accurate
+          if(x.IsPointingIn(y.getShapeWithText()) || x == component.sinkNode){//if it is a feed back not 100% accurate
             curveHorizontal = -1;//curve downward
-            curveoffset = Math.max(y.getFollowersOut().length, x.getFollowersIn().length);
+            curveoffset = Math.max(y.getFollowersOut().length, x.getFollowersIn().length)+1;
           }
           var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //build new arrow component
           x.addFollowerOut(arrow);
