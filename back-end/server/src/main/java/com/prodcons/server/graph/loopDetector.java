@@ -46,7 +46,7 @@ public class loopDetector {
                     x.add(allLoops.get(index));
                 }
                 boolean flag = true;
-                List<List<String>> list = Lists.cartesianProduct(Lists.newArrayList(x));
+                List<List<String>> list = Lists.cartesianProduct(x);
                 for(List<String> y : list)
                 {
                     if(!this.isNonTouching(y))
@@ -56,7 +56,7 @@ public class loopDetector {
                 }
                 if(flag)
                 {
-                    answer.add(Lists.newArrayList(x));
+                    answer.add(x);
                 }
             }
         }
