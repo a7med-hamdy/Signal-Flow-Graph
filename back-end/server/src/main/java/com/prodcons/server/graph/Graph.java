@@ -252,7 +252,9 @@ public class Graph {
         }
         if(determinant == 0)
         {
-            return "infinity";
+            JSONObject ans = new JSONObject();
+            ans.putOpt("answer", "infinity");
+            return ans.toString();
         }
         double answer = sum / determinant;
         System.out.println(answer);

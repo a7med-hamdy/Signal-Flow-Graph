@@ -103,7 +103,7 @@ export class BoardComponent implements OnInit {
 
           });
           this.req.get_overall_gain().subscribe(data => {//request oveerall gain
-            this.answer = data;
+            this.answer = data.answer;
             console.log(data);
           });
 
