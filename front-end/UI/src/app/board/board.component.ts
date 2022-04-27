@@ -130,7 +130,8 @@ export class BoardComponent implements OnInit {
   updateGains(){
     for(var i = 0; i < this.pointers.length;i++){
       var edge = this.pointers[i];
-        this.req.setEdgeWeight(edge.getSource().name(), edge.getDestination().name(), edge.getText().text());
+        this.req.setEdgeWeight(edge.getSource().name(), edge.getDestination().name(),
+                               edge.getText().text(),edge.getText().name());
         console.log("changed edge weight from"+edge.getText().name() + " to " + edge.getText().text());
     }
   }
