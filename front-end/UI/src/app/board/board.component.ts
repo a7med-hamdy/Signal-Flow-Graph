@@ -125,6 +125,7 @@ export class BoardComponent implements OnInit {
         this.req.setEdgeWeight(edge.getSource().name(), edge.getDestination().name(),
                               edge.getText().name(),edge.getText().text());
         console.log("changed edge weight from"+edge.getText().name() + " to " + edge.getText().text());
+        edge.getText().name(edge.getText().text());
     }
   }
 
