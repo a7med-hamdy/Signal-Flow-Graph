@@ -155,7 +155,6 @@ export class shapeFactory{
         textNode.show();
         tr.show();
         tr.forceUpdate();
-        tr.fire('dblclick dbltap');
       }
 
       function setTextareaWidth(newWidth:any) {
@@ -190,6 +189,8 @@ export class shapeFactory{
             textNode.text(textarea.value.trim().replaceAll(" ", ""));
           }
           removeTextarea();
+          tr.fire('dblclick dbltap');
+
         }
         // on esc do not set value back to node
         if (e.keyCode === 27) {
@@ -212,6 +213,7 @@ export class shapeFactory{
             textNode.text(textarea.value.trim().replaceAll(" ", ""));
         }
           removeTextarea();
+          tr.fire('dblclick dbltap');
         }
       }
       setTimeout(() => {
