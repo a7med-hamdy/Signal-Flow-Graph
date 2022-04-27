@@ -89,8 +89,11 @@ public class Graph {
         this.determinant = 1;
     }
 
+    // set the weight of a specific edge
+    // the method is synchronized because multiple set edge requests can occur simoultanisly
     public synchronized void setEdgeWeight(String source, String destination, double new_weight, double old_weight)
     {
+        // if the new and old weights are the same return, nothing to update
         if(new_weight == old_weight)
         {
             return;
@@ -114,18 +117,19 @@ public class Graph {
         System.out.println("********************************************");
     }
 
+    // get the forward paths in the graph from the startVertex to endVertex
     public String getPaths(){
         
         JSONArray arr = new JSONArray();
         this.forwardPaths= this.paths.getAllPaths(this.startVertex, this.endVertex, true, null);
         for(int i = 0; i < this.forwardPaths.size(); i++){
+            // store each path and calculate its gain
             List<DefaultWeightedEdge> edges = this.forwardPaths.get(i).getEdgeList();
             double gain = 1.0;
             for(DefaultWeightedEdge e : edges){
                 gain *=  this.graph.getEdgeWeight(e);
             }
             pathsGain.add(gain);
-            // System.out.println("P" + (i+1) +": " + this.forwardPaths.get(i).getVertexList() + " gain: " + gain);
             JSONObject obj = new JSONObject();
             obj.putOpt("path", this.forwardPaths.get(i).getVertexList());
             obj.putOpt("gain", gain);
@@ -135,9 +139,11 @@ public class Graph {
         return arr.toString();
     }
 
+    // get all the loops in the graph
     public String getAllLoops()
     {
         JSONArray arr = new JSONArray();
+        // use the detector to get all the loops
         this.Looplist = this.detector.getLoops();
         for(List<String> li: Looplist)
         {
@@ -156,10 +162,12 @@ public class Graph {
         return arr.toString();
     }
 
+    // get the loops classified 2 non-touching, 3 non-touching, .......
     public String getLoopsClassified()
     {
         JSONArray arr = new JSONArray();
         boolean found = false;
+        // use the detector's method
         this.loops = this.detector.getNonTouchingLoops();
         ArrayList<JSONObject> objects = new ArrayList<>();
         for(List<List<String>> l: this.loops)
@@ -203,6 +211,7 @@ public class Graph {
         return arr.toString();
     }
 
+    // calculate path factors for each forward path
     public String calculatePathFactors(){
         JSONArray arr = new JSONArray();
         for(int i = 0; i < forwardPaths.size(); i++){
@@ -212,6 +221,7 @@ public class Graph {
             for(List<List<String>> loopsList: loops){
                 double loopGain = 1.0;
                 boolean isolated = true;
+                //remove the forward paths touching the loop and calculate the loop gain
                 for(List<String> loop : loopsList){
                     isolated = isolated & Collections.disjoint(path, loop);
                     loopGain *= getGain(loop);
@@ -235,24 +245,25 @@ public class Graph {
     public String calculateDeterminant(){
         for(List<List<String>> loopsList : loops) {
             double loopGain = 1.0;
+            // multiply the gain of teh non-touching loops
             for (List<String> loop : loopsList) {
                 loopGain *= getGain(loop);
             }
             if (loopsList.size() % 2 == 1) {
-                // System.out.println(-loopGain);
                 this.determinant -= loopGain;
             } else {
-                // System.out.println(loopGain);
                 this.determinant += loopGain;
             }
         }
         System.out.println("d = " + determinant);
         return Double.toString(determinant);
     }
+    // calculate the overall gain
     public String getOverallGain()
     {
         double sum = 0;
         int i = 0;
+        // add path factors
         for(double gain : this.pathsGain)
         {
             sum += gain*this.pathFactor.get(i);
@@ -266,7 +277,7 @@ public class Graph {
     }
 
 
-   
+   // get the gain of teh specified path
     private double getGain(List<String> path)
     {
         double gain = 1;
@@ -274,11 +285,13 @@ public class Graph {
         {
             Set<DefaultWeightedEdge> s = this.graph.getAllEdges(path.get(i), path.get((i+1)%path.size()));
             DefaultWeightedEdge e = this.graph.getEdge(path.get(i), path.get((i+1)%path.size()));
+            // if there is only single edge
             if(s.size() == 1)
             {
                 gain *= this.graph.getEdgeWeight(e);
                 continue;
             }
+            //  if there are multiple edges
             else
             {
                 //search for the edge 
@@ -302,9 +315,10 @@ public class Graph {
                     if(set.size() == 0){setFound = true;setTemp = set;}
                 }
                 if(setFound){buffer.remove(setTemp);}
+                // add the set use the first element gain and remove it
                 if(!found)
                 {
-                    DefaultWeightedEdge edge = s.iterator().next();
+                    DefaultWeightedEdge edge = s.iterator().next(); // get the first element
                     gain *= this.graph.getEdgeWeight(edge);
                     s.remove(edge);
                     buffer.add(s);
