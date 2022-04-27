@@ -59,22 +59,16 @@ export class shapeFactory{
    * builds an editable konva text
    * @returns konva text object
    */
-  public static buildEditableText(){
+  public static buildEditableText(tr:Konva.Transformer){
     var textNode:any = new Konva.Text({
+      name:'1',
       text:'1',
       fill:'white',
       fontFamily:'Consolas',
       fontSize:20,
     });
-    var tr = new Konva.Transformer({
-      enabledAnchors: ['middle-left', 'middle-right'],
-      // set minimum width of text
-      boundBoxFunc: function (oldBox, newBox) {
-        newBox.width = Math.max(30, newBox.width);
-        return newBox;
-      },
-    });
-    tr.attachTo(textNode);
+
+    tr.nodes([textNode]);
     textNode.on('transform', function () {
       // reset scale, so only with is changing by transformer
       textNode.setAttrs({
@@ -161,6 +155,7 @@ export class shapeFactory{
         textNode.show();
         tr.show();
         tr.forceUpdate();
+        tr.fire('dblclick dbltap');
       }
 
       function setTextareaWidth(newWidth:any) {
@@ -191,6 +186,7 @@ export class shapeFactory{
         if (e.keyCode === 13 && !e.shiftKey) {
 
           if(!isNaN(textarea.value) && textarea.value != ""){
+            textNode.name(textNode.text());
             textNode.text(textarea.value.trim().replaceAll(" ", ""));
           }
           removeTextarea();
@@ -211,8 +207,10 @@ export class shapeFactory{
 
       function handleOutsideClick(e:any) {
         if (e.target !== textarea) {
-          if(!isNaN(textarea.value) && textarea.value != "")
-          textNode.text(textarea.value.trim().replaceAll(" ", ""));
+          if(!isNaN(textarea.value) && textarea.value != ""){
+            textNode.name(textNode.text());
+            textNode.text(textarea.value.trim().replaceAll(" ", ""));
+        }
           removeTextarea();
         }
       }
@@ -286,10 +284,11 @@ export class shapeFactory{
    * @param dst destination
    * @param offset offset of curve varies from high curves to straightlines
    * @param curveup curves upward or downward
+   * @param transformer listener for change
    * @returns arrow object
    */
-  public static buildBranch(src:Konva.Group, dst: Konva.Group,offset:number, curveup:number){
-    var text = this.buildEditableText();
+  public static buildBranch(src:Konva.Group, dst: Konva.Group,offset:number, curveup:number, transformer:Konva.Transformer){
+    var text = this.buildEditableText(transformer);
     var arrow = this.buildArrow(src, dst,text,offset,curveup);
     var edge = new Arrow(src, dst,arrow,text);
 
