@@ -15,6 +15,9 @@ public class Graph {
     private AllDirectedPaths<String, DefaultWeightedEdge> paths = new AllDirectedPaths<>(this.graph);
     private List<GraphPath<String,DefaultWeightedEdge>> forwardPaths;
     private List<Double> pathsGain = new ArrayList<>();
+    private List<List<String>> Looplist;
+    private List<Double> loopGains = new ArrayList<>();
+    private ArrayList<Set<DefaultWeightedEdge>> buffer = new ArrayList<>();
     private List<Double> pathFactor = new ArrayList<>();
     private List<List<List<String>>> loops;
     private String startVertex = "";
@@ -57,8 +60,7 @@ public class Graph {
     public void addEdge(String source, String destination) 
     {
         try{
-            DefaultWeightedEdge e = this.graph.addEdge(source, destination);
-            // this.graph.setEdgeWeight(e, 1);
+            this.graph.addEdge(source, destination);
             System.out.println("edge added");
             Set<DefaultWeightedEdge> s = this.graph.getAllEdges(source, destination);
             for(DefaultWeightedEdge edge : s)
@@ -78,6 +80,8 @@ public class Graph {
         this.detector = new loopDetector(this.graph);
         this.pathFactor = new ArrayList<>();
         this.pathsGain = new ArrayList<>();
+        this.buffer = new ArrayList<>();
+        this.loopGains = new ArrayList<>();
         this.determinant = 1;
     }
 
@@ -130,8 +134,8 @@ public class Graph {
     public String getAllLoops()
     {
         JSONArray arr = new JSONArray();
-        List<List<String>> list = this.detector.getLoops();
-        for(List<String> li: list)
+        this.Looplist = this.detector.getLoops();
+        for(List<String> li: Looplist)
         {
             JSONObject o = new JSONObject();
             o.putOpt("loop", new JSONArray());
@@ -260,12 +264,21 @@ public class Graph {
     }
 
 
-    private double getGain(List<String> path)
+    private void getGains(List<List<String>> paths)
     {
+
         double gain = 1;
-        for(int i = 0; i < path.size(); i++)
+        for(List<String> path: paths)
         {
-            gain *= this.graph.getEdgeWeight(this.graph.getEdge(path.get(i), path.get((i+1)%path.size())));
+            for(int i = 0; i < path.size(); i++)
+            {
+                Set<DefaultWeightedEdge> s = this.graph.getAllEdges(path.get(i), path.get((i+1)%path.size()));
+                if(this.buffer.get(0))
+                {
+
+                }
+                gain *= this.graph.getEdgeWeight();
+            }
         }
         return gain;
     }
