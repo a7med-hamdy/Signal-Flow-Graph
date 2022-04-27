@@ -23,14 +23,6 @@ export class BoardComponent implements OnInit {
   answer:any;//resulting overall gain
   stage!:Konva.Stage;//stage
   layer!:Konva.Layer;//layer
-  transformer:Konva.Transformer = new Konva.Transformer({
-    enabledAnchors: ['middle-left', 'middle-right'],
-    // set minimum width of text
-    boundBoxFunc: function (oldBox, newBox) {
-      newBox.width = Math.max(30, newBox.width);
-      return newBox;
-    },
-  });//transformer
   numOfMs = 0;//number of nodes used for numbering them
   displayError: boolean = true;
   constructor(private req:RequestsService) { }
@@ -44,8 +36,8 @@ export class BoardComponent implements OnInit {
     });
     this.layer = new Konva.Layer();//create layer on start
     this.stage.add(this.layer);//add the layer to the stage on start
-    this.transformer.on('dblclick dbltap',()=>{
-      console.log('dblclick dbltap');
+    window.addEventListener('update',()=>{//listen to update events to update gains automatically
+      console.log('updating');
       this.updateGains();
     });
   }
@@ -131,7 +123,7 @@ export class BoardComponent implements OnInit {
     for(var i = 0; i < this.pointers.length;i++){
       var edge = this.pointers[i];
         this.req.setEdgeWeight(edge.getSource().name(), edge.getDestination().name(),
-                               edge.getText().text(),edge.getText().name());
+                              edge.getText().name(),edge.getText().text());
         console.log("changed edge weight from"+edge.getText().name() + " to " + edge.getText().text());
     }
   }
@@ -220,7 +212,7 @@ export class BoardComponent implements OnInit {
           var x = component.getShapeWithTextFromArray(source);
           var y = component.getShapeWithTextFromArray(destination);
           //calculate curve offset
-          var curveoffset = Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
+          var curveoffset =(source==destination) ? 1: Math.max(x.getFollowersOut().length, y.getFollowersIn().length);
           //it curves upwards by default
           var curveHorizontal = 1;
           if(x.IsPointingIn(y.getShapeWithText()) || x == component.sinkNode){//if it is a feed back not 100% accurate
@@ -231,7 +223,7 @@ export class BoardComponent implements OnInit {
           component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), 1).subscribe(data =>{
             console.log(data);
             if(data){
-              var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal, component.transformer); //build new arrow component
+              var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //build new arrow component
               x.addFollowerOut(arrow);
               y.addFollowerIn(arrow);
               component.pointers.push(arrow);    //add the arrow to the shapes's arrays

@@ -1,3 +1,4 @@
+import { Reference } from "@angular/compiler/src/render3/r3_ast";
 import Konva from "konva";
 import { Arrow } from "./arrow";
 import { ShapeWithText } from "./shapeWithText";
@@ -56,10 +57,11 @@ export class shapeFactory{
   }
 
   /**
-   * builds an editable konva text
+   * builds an editable konva text when the object's value changes it fires an update
+   * event in the window
    * @returns konva text object
    */
-  public static buildEditableText(tr:Konva.Transformer){
+  public static buildEditableText(){
     var textNode:any = new Konva.Text({
       name:'1',
       text:'1',
@@ -67,22 +69,11 @@ export class shapeFactory{
       fontFamily:'Consolas',
       fontSize:20,
     });
-
-    tr.nodes([textNode]);
-    textNode.on('transform', function () {
-      // reset scale, so only with is changing by transformer
-      textNode.setAttrs({
-        width: textNode.width() * textNode.scaleX(),
-        scaleX: 1,
-        x: 50,
-        y: 80,
-      });
-    });
+    var updatevent = new CustomEvent("update");//event when fired updates the weight of the edge
 
     textNode.on('dblclick dbltap', () => {
-      // hide text node and transformer:
+      // hide text node
       textNode.hide();
-      tr.hide();
 
       // create textarea over canvas with absolute position
       // first we need to find position for textarea
@@ -153,8 +144,6 @@ export class shapeFactory{
         textarea.parentNode.removeChild(textarea);
         window.removeEventListener('click', handleOutsideClick);
         textNode.show();
-        tr.show();
-        tr.forceUpdate();
       }
 
       function setTextareaWidth(newWidth:any) {
@@ -185,11 +174,11 @@ export class shapeFactory{
         if (e.keyCode === 13 && !e.shiftKey) {
 
           if(!isNaN(textarea.value) && textarea.value != ""){
-            textNode.name(textNode.text());
-            textNode.text(textarea.value.trim().replaceAll(" ", ""));
+            textNode.name(textNode.text());//save old value
+            textNode.text(textarea.value.trim().replaceAll(" ", ""));//change value
+            window.dispatchEvent(updatevent);//fire update event
           }
           removeTextarea();
-          tr.fire('dblclick dbltap');
 
         }
         // on esc do not set value back to node
@@ -209,11 +198,11 @@ export class shapeFactory{
       function handleOutsideClick(e:any) {
         if (e.target !== textarea) {
           if(!isNaN(textarea.value) && textarea.value != ""){
-            textNode.name(textNode.text());
-            textNode.text(textarea.value.trim().replaceAll(" ", ""));
-        }
-          removeTextarea();
-          tr.fire('dblclick dbltap');
+            textNode.name(textNode.text());//save old value
+            textNode.text(textarea.value.trim().replaceAll(" ", ""));//change value
+            window.dispatchEvent(updatevent);//fire update event
+          }
+        removeTextarea();
         }
       }
       setTimeout(() => {
@@ -289,8 +278,8 @@ export class shapeFactory{
    * @param transformer listener for change
    * @returns arrow object
    */
-  public static buildBranch(src:Konva.Group, dst: Konva.Group,offset:number, curveup:number, transformer:Konva.Transformer){
-    var text = this.buildEditableText(transformer);
+  public static buildBranch(src:Konva.Group, dst: Konva.Group,offset:number, curveup:number){
+    var text = this.buildEditableText();
     var arrow = this.buildArrow(src, dst,text,offset,curveup);
     var edge = new Arrow(src, dst,arrow,text);
 
