@@ -198,7 +198,7 @@ export class BoardComponent implements OnInit {
       }
       if(clicks >= 2){//two clicks
         console.log("Two clicks")
-        if(source != null && destination != null && source != destination){
+        if(source != null && destination != null){
           console.log("adding arrows!")
           try{
           //get the source and destination shapes
