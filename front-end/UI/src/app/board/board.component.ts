@@ -222,7 +222,8 @@ export class BoardComponent implements OnInit {
           var curveHorizontal = 1;
           if(x.IsPointingIn(y.getShapeWithText()) || x == component.sinkNode){//if it is a feed back not 100% accurate
             curveHorizontal = -1;//curve downward
-            curveoffset = Math.max(y.getFollowersOut().length, x.getFollowersIn().length)+1;
+            curveoffset =(source==destination) ? Math.max(x.getFollowersOut().length, y.getFollowersIn().length):
+             Math.max(y.getFollowersOut().length, x.getFollowersIn().length)+1;
           }
 
           component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), 1).subscribe(data =>{
