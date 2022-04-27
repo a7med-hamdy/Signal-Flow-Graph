@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import  org.jgrapht.alg.shortestpath.*;
-import java.util.ArrayList;
 
 public class Graph {
     private DirectedWeightedPseudograph<String, DefaultWeightedEdge> graph = new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
@@ -25,21 +24,25 @@ public class Graph {
     private double determinant = 1;
     public Graph (){}
 
-
+    // add vertex to the graph
     public void addVertex(String v)
     {
         this.graph.addVertex(v);
     }
+    // check whether the graph is connected(valid) or not
+    // if invalid don't do operations on it
     public boolean isValid()
     {
         ConnectivityInspector<String, DefaultWeightedEdge>inspector = new ConnectivityInspector<>(this.graph);
         System.out.println(inspector.isConnected());
         return inspector.isConnected();
     }
-
+    //set the start vertex
     public void setStartVertex(String v){ this.startVertex = v; }
+    //set the end vertex
     public void setEndVertex(String v)  { this.endVertex = v;   }
 
+    // add edge with a weight
     public void addEdge(String source, String destination, double weight)
     {
         try{
@@ -57,6 +60,7 @@ public class Graph {
             System.out.println("error adding edge");
         }
     }
+    // add edge with default weight (1)
     public void addEdge(String source, String destination) 
     {
         try{
@@ -73,7 +77,7 @@ public class Graph {
             System.out.println("error adding edge");
         }
     }
-
+    // reset the values stored by graph in case or requiring to do operations again 
     public void resetGraphCalculations()
     {
         this.paths = new AllDirectedPaths<>(this.graph);
@@ -262,20 +266,49 @@ public class Graph {
     }
 
 
-    private void getGains(List<List<String>> paths)
+   
+    private double getGain(List<String> path)
     {
-
         double gain = 1;
-        for(List<String> path: paths)
+        for(int i = 0; i < path.size(); i++)
         {
-            for(int i = 0; i < path.size(); i++)
+            Set<DefaultWeightedEdge> s = this.graph.getAllEdges(path.get(i), path.get((i+1)%path.size()));
+            DefaultWeightedEdge e = this.graph.getEdge(path.get(i), path.get((i+1)%path.size()));
+            if(s.size() == 1)
             {
-                Set<DefaultWeightedEdge> s = this.graph.getAllEdges(path.get(i), path.get((i+1)%path.size()));
-                if(this.buffer.get(0))
+                gain *= this.graph.getEdgeWeight(e);
+                continue;
+            }
+            else
+            {
+                //search for the edge 
+                boolean found = false;
+                boolean setFound = false;
+                Set<DefaultWeightedEdge> setTemp = new HashSet<>();
+                for(Set<DefaultWeightedEdge> set : buffer)
                 {
-
+                    //check only the first element of each set because they are all the same
+                    DefaultWeightedEdge temp = e;
+                    for(DefaultWeightedEdge edge: set)
+                    {
+                        // if found take the gain from the stored value and remove it
+                        if(this.graph.getEdgeSource(edge) == this.graph.getEdgeSource(edge)
+                            && this.graph.getEdgeTarget(edge) == this.graph.getEdgeTarget(edge)
+                        ){found = true; temp = edge;gain *= this.graph.getEdgeWeight(edge);}
+                        break;
+                    }
+                    if(found){set.remove(temp);}
+                    // remove the set it it's empty
+                    if(set.size() == 0){setFound = true;setTemp = set;}
                 }
-                gain *= this.graph.getEdgeWeight();
+                if(setFound){buffer.remove(setTemp);}
+                if(!found)
+                {
+                    DefaultWeightedEdge edge = s.iterator().next();
+                    gain *= this.graph.getEdgeWeight(edge);
+                    s.remove(edge);
+                    buffer.add(s);
+                }
             }
         }
         return gain;
