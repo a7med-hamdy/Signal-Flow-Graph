@@ -74,7 +74,7 @@ public class Graph {
     }
 
     public String getPaths(){
-        System.out.println("called");
+        
         JSONArray arr = new JSONArray();
         this.forwardPaths= this.paths.getAllPaths(this.startVertex, this.endVertex, true, null);
         for(int i = 0; i < this.forwardPaths.size(); i++){

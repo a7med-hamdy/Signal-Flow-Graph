@@ -2,6 +2,8 @@ package com.prodcons.server.graph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+
 import org.jgrapht.alg.cycle.HawickJamesSimpleCycles;
 import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -24,19 +26,25 @@ public class loopDetector {
     {
         List<List<List<String>>> answer = new ArrayList<>();
         List<List<String>> allLoops = this.detector.findSimpleCycles();
+        int w = 0;
+        ArrayList<Integer> indices = new ArrayList<>();
         for(List<String> l : allLoops){
             List<List<String >> list = new ArrayList<>();
             list.add(l);
             answer.add(list);
+            indices.add(w);
+            w++;
         }
-        //answer.add(allLoops);
-        // List<List<String>> li = Lists.cartesianProduct(allLoops);
-        for(int i = 2; i <= allLoops.size(); i++)
+        for(int i = 2; i <= indices.size(); i++)
         {
-            Set<Set<List<String>>> set = Sets.combinations(Sets.newHashSet(allLoops), i);
-
-            for(Set<List<String>> x: set)
+            Set<Set<Integer>> set = Sets.combinations(Sets.newHashSet(indices), i);
+            for(Set<Integer> q: set)
             {
+                List<List<String>> x = new ArrayList<>();
+                for(int index : q)
+                {
+                    x.add(allLoops.get(index));
+                }
                 boolean flag = true;
                 List<List<String>> list = Lists.cartesianProduct(Lists.newArrayList(x));
                 for(List<String> y : list)
