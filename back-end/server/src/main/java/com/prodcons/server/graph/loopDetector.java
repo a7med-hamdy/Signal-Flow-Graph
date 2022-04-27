@@ -2,18 +2,18 @@ package com.prodcons.server.graph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.jgrapht.alg.cycle.SzwarcfiterLauerSimpleCycles;
+import org.jgrapht.alg.cycle.HawickJamesSimpleCycles;
 import org.jgrapht.graph.DirectedWeightedPseudograph;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import com.google.common.collect.*;
 
 public class loopDetector {
     private DirectedWeightedPseudograph<String, DefaultWeightedEdge> graph;
-    SzwarcfiterLauerSimpleCycles<String, DefaultWeightedEdge> detector;
+    HawickJamesSimpleCycles<String, DefaultWeightedEdge> detector;
     public loopDetector(DirectedWeightedPseudograph<String, DefaultWeightedEdge> graph)
     {
         this.graph = graph;
-        this.detector = new SzwarcfiterLauerSimpleCycles<>(graph);
+        this.detector = new HawickJamesSimpleCycles<>(graph);
     }
     public List<List<String>> getLoops()
     {
