@@ -40,8 +40,14 @@ public class Graph {
     public void addEdge(String source, String destination, double weight)
     {
         try{
-            this.graph.addEdge(source, destination);
-            this.graph.setEdgeWeight(this.graph.getEdge(source, destination), weight);
+            DefaultWeightedEdge e = this.graph.addEdge(source, destination);
+            this.graph.setEdgeWeight(e, weight);
+            System.out.println("edge added");
+            Set<DefaultWeightedEdge> s = this.graph.getAllEdges(source, destination);
+            for(DefaultWeightedEdge edge : s)
+            {
+                System.out.println("new weight : " + this.graph.getEdgeWeight(edge));
+            }
         }
         catch(IllegalArgumentException e)
         {
@@ -51,7 +57,14 @@ public class Graph {
     public void addEdge(String source, String destination) 
     {
         try{
-            this.graph.addEdge(source, destination);
+            DefaultWeightedEdge e = this.graph.addEdge(source, destination);
+            // this.graph.setEdgeWeight(e, 1);
+            System.out.println("edge added");
+            Set<DefaultWeightedEdge> s = this.graph.getAllEdges(source, destination);
+            for(DefaultWeightedEdge edge : s)
+            {
+                System.out.println("new weight : " + this.graph.getEdgeWeight(edge));
+            }
         }
         catch(IllegalArgumentException e)
         {
@@ -68,16 +81,29 @@ public class Graph {
         this.determinant = 1;
     }
 
-    public void setEdgeWeight(String source, String destination, double new_weight, double old_weight)
+    public synchronized void setEdgeWeight(String source, String destination, double new_weight, double old_weight)
     {
+        if(new_weight == old_weight)
+        {
+            return;
+        }
         Set<DefaultWeightedEdge> s = this.graph.getAllEdges(source, destination);
+        System.out.println("new weight: " + new_weight + " old_weight: " + old_weight);
+        System.out.println(source + "  -->  " + destination);
         for(DefaultWeightedEdge edge : s)
         {
             if(this.graph.getEdgeWeight(edge) == old_weight)
             {
+                System.out.println("found");
                 this.graph.setEdgeWeight(edge, new_weight);
+                break;
             }
         }
+        for(DefaultWeightedEdge edge : s)
+        {
+            System.out.println("new weight : " + this.graph.getEdgeWeight(edge));
+        }
+        System.out.println("********************************************");
     }
 
     public String getPaths(){
@@ -212,7 +238,7 @@ public class Graph {
                 this.determinant += loopGain;
             }
         }
-        // System.out.println("d = " + determinant);
+        System.out.println("d = " + determinant);
         return Double.toString(determinant);
     }
     public String getOverallGain()
@@ -229,6 +255,7 @@ public class Graph {
             return "infinity";
         }
         double answer = sum / determinant;
+        System.out.println(answer);
         return Double.toString(answer);
     }
 

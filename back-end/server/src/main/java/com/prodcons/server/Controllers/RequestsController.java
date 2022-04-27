@@ -95,7 +95,7 @@ public class RequestsController {
     public boolean set_edge_weight(
         @PathVariable("from") String from,
         @PathVariable("to") String to,
-        @PathVariable("new_weight") Double old_weight,
+        @PathVariable("old_weight") Double old_weight,
         @PathVariable("new_weight") Double new_weight)
 
     {
