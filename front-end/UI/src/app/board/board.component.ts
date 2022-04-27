@@ -37,7 +37,7 @@ export class BoardComponent implements OnInit {
     this.layer = new Konva.Layer();//create layer on start
     this.stage.add(this.layer);//add the layer to the stage on start
     window.addEventListener('update',()=>{//listen to update events to update gains automatically
-      console.log('updating');
+      //console.log('updating');
       this.updateGains();
     });
   }
@@ -76,30 +76,30 @@ export class BoardComponent implements OnInit {
   startSolving(){
     this.hideResults = false;
     this.req.validate().subscribe(data=>{
-      console.log(data);
+      //console.log(data);
       if(data == true){
         this.displayError = true;
         this.req.solve().subscribe(data =>{//request to solve
           this.req.get_forward_paths().subscribe(data =>{//request paths array
             this.paths = data;
-            console.log(data);
+            //console.log(data);
           })
           this.req.get_loops().subscribe(data =>{//request loops array
             this.loops = data;
-            console.log(data);
+            //console.log(data);
           });
           this.req.get_non_touching_loops().subscribe(data =>{//request none touching loops array
             this.noneTouchingLoops = data;
-            console.log(data);
+            //console.log(data);
           });
 
           this.req.get_paths_determinants().subscribe(data => {//request paths determinants array
             this.pathsDeterminants = data;
-            console.log(data);
+            //console.log(data);
           });
           this.req.get_determinant().subscribe(data => {//request overall determinante
             this.determinant = data;
-            console.log(data);
+            //console.log(data);
 
           });
           this.req.get_overall_gain().subscribe(data => {//request oveerall gain
@@ -108,7 +108,7 @@ export class BoardComponent implements OnInit {
               this.answer = "∞";
             else
               this.answer = data.answer;
-            console.log(data);
+            //console.log(data);
           });
 
         });
@@ -128,7 +128,7 @@ export class BoardComponent implements OnInit {
       var edge = this.pointers[i];
         this.req.setEdgeWeight(edge.getSource().name(), edge.getDestination().name(),
                               edge.getText().name(),edge.getText().text());
-        console.log("changed edge weight from"+edge.getText().name() + " to " + edge.getText().text());
+        //console.log("changed edge weight from"+edge.getText().name() + " to " + edge.getText().text());
         edge.getText().name(edge.getText().text());
     }
   }
@@ -186,7 +186,7 @@ export class BoardComponent implements OnInit {
    * adds arrows between two shapes
    */
   addArrow(){
-    console.log("add Arrows!");
+    //console.log("add Arrows!");
     var source:any;//source shape
     var destination:any;//destination shape
     var clicks = 0;//number of clicks
@@ -195,23 +195,23 @@ export class BoardComponent implements OnInit {
     this.stage.on("mouseenter",()=>{this.stage.container().style.cursor = "crosshair"});//change cursor event
     this.stage.on("click",function(e){//click event
       clicks++;//increment clicks counter
-      console.log(e.target)
+      //console.log(e.target)
       if(e.target instanceof Konva.Shape){ //if the clicked shape is a konva shape
         //gets its source group
         if (clicks == 1){
-          console.log("1stClick")
+          //console.log("1stClick")
           source = e.target.getParent();
         }
         //gets its destination group
         if(clicks == 2){
-          console.log("2ndClick")
+          //console.log("2ndClick")
           destination = e.target.getParent();
         }
       }
       if(clicks >= 2){//two clicks
-        console.log("Two clicks")
+        //console.log("Two clicks")
         if(source != null && destination != null){
-          console.log("adding arrows!")
+          //console.log("adding arrows!")
           try{
           //get the source and destination shapes
           var x = component.getShapeWithTextFromArray(source);
@@ -227,7 +227,7 @@ export class BoardComponent implements OnInit {
           }
 
           component.req.addEdgeWithWeight(x.getShapeWithText().name(),y.getShapeWithText().name(), 1).subscribe(data =>{
-            console.log(data);
+            //console.log(data);
             if(data){
               var arrow = shapeFactory.buildBranch(source,destination,curveoffset, curveHorizontal); //build new arrow component
               x.addFollowerOut(arrow);
