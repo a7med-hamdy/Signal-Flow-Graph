@@ -103,7 +103,11 @@ export class BoardComponent implements OnInit {
 
           });
           this.req.get_overall_gain().subscribe(data => {//request oveerall gain
-            this.answer = data.answer;
+
+            if(data.answer == "Infinity")
+              this.answer = "∞";
+            else
+              this.answer = data.answer;
             console.log(data);
           });
 
