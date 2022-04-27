@@ -91,15 +91,16 @@ public class RequestsController {
     }
 
     //setting/updating an edge weight - post request
-    @PostMapping("/set-edge-weight/{from}/{to}/{new_weight}")
+    @PostMapping("/set-edge-weight/{from}/{to}/{old_weight}/{new_weight}")
     public boolean set_edge_weight(
         @PathVariable("from") String from,
         @PathVariable("to") String to,
+        @PathVariable("new_weight") Double old_weight,
         @PathVariable("new_weight") Double new_weight)
 
     {
         try{
-            this.SFG.setEdgeWeight(from, to, new_weight);
+            this.SFG.setEdgeWeight(from, to, new_weight, old_weight);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -107,7 +108,6 @@ public class RequestsController {
         }
         return true;
     }
-
 
     //clear the whole graph to draw another one - delete request
     @DeleteMapping("/clear")

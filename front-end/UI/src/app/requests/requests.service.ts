@@ -73,10 +73,11 @@ export class RequestsService {
   /**Edge weight setting/updating request
    * @param from       the source node of the edge
    * @param to         the destination node of the edge
+   * @param old_weight the old weight of the edge
    * @param new_weight the new weight set to the edge
    */
-  setEdgeWeight(from: string, to: string, new_weight: number){
-    let info = `/${from}/${to}/${new_weight}`
+   setEdgeWeight(from: string, to: string, old_weight: number, new_weight: number){
+    let info = `/${from}/${to}/${old_weight}/${new_weight}`
     return this.http.post<any>(`${this.url}/set-edge-weight${info}`, {})
     .subscribe(data =>{
       console.log(`Edge ${from}-${to} updated\nwith new weight ${new_weight}`);

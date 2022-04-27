@@ -37,18 +37,11 @@ public class Graph {
     public void setStartVertex(String v){ this.startVertex = v; }
     public void setEndVertex(String v)  { this.endVertex = v;   }
 
-    public void addEdge(String source, String destination, double new_weight, double old_weight)
+    public void addEdge(String source, String destination, double weight)
     {
         try{
             this.graph.addEdge(source, destination);
-            Set<DefaultWeightedEdge> s = this.graph.getAllEdges(source, destination);
-            for(DefaultWeightedEdge edge : s)
-            {
-                if(this.graph.getEdgeWeight(edge) == old_weight)
-                {
-                    this.graph.setEdgeWeight(edge, new_weight);
-                }
-            }
+            this.graph.setEdgeWeight(this.graph.getEdge(source, destination), weight);
         }
         catch(IllegalArgumentException e)
         {
